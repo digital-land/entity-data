@@ -1,4 +1,4 @@
-# Digital Land Entities
+# A spike on creating Digital Land Entities
 
 Seed data for creating a stable identifier for a Digital Land entity from the view model and collections.
 
