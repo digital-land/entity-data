@@ -20,7 +20,7 @@ download () {
     fi
 }
 
-csvcut -c collection ../specification/specification/collection.csv | tail -n +2 |
+csvcut -c collection specification/collection.csv | tail -n +2 |
 while read collection
 do
     # collection files
