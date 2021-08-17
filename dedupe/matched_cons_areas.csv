@@ -1,12 +1,4 @@
 slug,name,geography,url
-/conservation-area/local-authority-eng/BEX/COA00000566,COA00000566,conservation-area:COA00000566,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000566
-/conservation-area/local-authority-eng/BEX/COA00000715,COA00000715,conservation-area:COA00000715,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000715
-/conservation-area/local-authority-eng/BEX/COA00000717,COA00000717,conservation-area:COA00000717,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000717
-,,,
-/conservation-area/local-authority-eng/BEX/COA00000718,COA00000718,conservation-area:COA00000718,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000718
-/conservation-area/local-authority-eng/BEX/COA00000719,COA00000719,conservation-area:COA00000719,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000719
-/conservation-area/local-authority-eng/BEX/COA00000720,COA00000720,conservation-area:COA00000720,https://digital-land.github.io/conservation-area/local-authority-eng/BEX/COA00000720
-,,,
 /conservation-area/local-authority-eng/CMD/COA00000423,Alexandra Road COA00000423,conservation-area:COA00000423,https://digital-land.github.io/conservation-area/local-authority-eng/CMD/COA00000423
 /conservation-area/local-authority-eng/CMD/kml-176,Alexandra Road,conservation-area:kml_176,https://digital-land.github.io/conservation-area/local-authority-eng/CMD/kml-176
 ,,,
@@ -52,14 +44,8 @@ slug,name,geography,url
 /conservation-area/local-authority-eng/CMD/COA00000467,West Kentish Town COA00000467,conservation-area:COA00000467,https://digital-land.github.io/conservation-area/local-authority-eng/CMD/COA00000467
 /conservation-area/local-authority-eng/CMD/kml-115,West Kentish Town,conservation-area:kml_115,https://digital-land.github.io/conservation-area/local-authority-eng/CMD/kml-115
 ,,,
-/conservation-area/local-authority-eng/DUD/77,THE PADDOCK 66 HIGH STREET KINGSWINFORD.,conservation-area:77,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/77
-/conservation-area/local-authority-eng/DUD/90,THE VILLAGE KINGSWINFORD,conservation-area:90,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/90
-,,,
 /conservation-area/local-authority-eng/DUD/79,LOVE LANE OLDSWINFORD,conservation-area:79,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/79
 /conservation-area/local-authority-eng/DUD/80,LOVE LANE OLDSWINFORD,conservation-area:80,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/80
-,,,
-/conservation-area/local-authority-eng/DUD/81,"Market Street, Stourbridge",conservation-area:81,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/81
-/conservation-area/local-authority-eng/DUD/71,HIGH STREET STOUBRIDGE.,conservation-area:71,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/71
 ,,,
 /conservation-area/local-authority-eng/DUD/92,MUSHROOM GREEN DUDLEY WOOD.,conservation-area:92,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/92
 /conservation-area/local-authority-eng/DUD/97,MUSHROOM GREEN DUDLEY WOOD.,conservation-area:97,https://digital-land.github.io/conservation-area/local-authority-eng/DUD/97
@@ -73,14 +59,8 @@ slug,name,geography,url
 /conservation-area/local-authority-eng/EPS/29,Ewell Village (primary retail frontages only),conservation-area:29,https://digital-land.github.io/conservation-area/local-authority-eng/EPS/29
 /conservation-area/local-authority-eng/EPS/22,Ewell Village,conservation-area:22,https://digital-land.github.io/conservation-area/local-authority-eng/EPS/22
 ,,,
-/conservation-area/local-authority-eng/EPS/44,"Adephi Court, East Street, Epsom (Change of Use)",conservation-area:44,https://digital-land.github.io/conservation-area/local-authority-eng/EPS/44
-/conservation-area/local-authority-eng/EPS/1,Adelphi Road,conservation-area:1,https://digital-land.github.io/conservation-area/local-authority-eng/EPS/1
-,,,
 /conservation-area/local-authority-eng/GED/123514,CALVERTON C.A.,conservation-area:123514,https://digital-land.github.io/conservation-area/local-authority-eng/GED/123514
 /conservation-area/local-authority-eng/GED/92,CALVERTON C.A.,conservation-area:92,https://digital-land.github.io/conservation-area/local-authority-eng/GED/92
-,,,
-/conservation-area/local-authority-eng/GED/2,LNP - Conservation Area,conservation-area:2,https://digital-land.github.io/conservation-area/local-authority-eng/GED/2
-/conservation-area/local-authority-eng/GED/90,LINBY C.A.,conservation-area:90,https://digital-land.github.io/conservation-area/local-authority-eng/GED/90
 ,,,
 /conservation-area/local-authority-eng/HMF/21,Hammersmith Odeon,conservation-area:21,https://digital-land.github.io/conservation-area/local-authority-eng/HMF/21
 /conservation-area/local-authority-eng/HMF/44,Hammersmith Odeon,conservation-area:44,https://digital-land.github.io/conservation-area/local-authority-eng/HMF/44
@@ -5280,13 +5260,7 @@ slug,name,geography,url
 ,,,
 /conservation-area/local-authority-eng/MAL/50,Tollesbury (Reduction4),conservation-area:50,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/50
 ,,,
-/conservation-area/local-authority-eng/MAL/58,Maldon (Reduction1),conservation-area:58,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/58
-/conservation-area/local-authority-eng/MAL/82,Maldon (1),conservation-area:82,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/82
-,,,
 /conservation-area/local-authority-eng/MAL/63,Maldon (Reduction2),conservation-area:63,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/63
-,,,
-/conservation-area/local-authority-eng/MAL/64,Maldon (Addition7),conservation-area:64,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/64
-/conservation-area/local-authority-eng/MAL/70,Chelmer and Blackwater Navigation,conservation-area:70,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/70
 ,,,
 /conservation-area/local-authority-eng/MAL/65,Maldon (Addition8),conservation-area:65,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/65
 ,,,
@@ -5294,9 +5268,6 @@ slug,name,geography,url
 /conservation-area/local-authority-eng/MAL/75,Bradwell on Sea,conservation-area:75,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/75
 ,,,
 /conservation-area/local-authority-eng/MAL/8,Bradwell on Sea (Reduction2),conservation-area:8,https://digital-land.github.io/conservation-area/local-authority-eng/MAL/8
-,,,
-/conservation-area/local-authority-eng/MOL/LEA-Area-1---LEATHERHEAD-Extension-JULY-2012,Area 1 - LEATHERHEAD Extension JULY 2012,conservation-area:LEA Area 1 - LEATHERHEAD Extension JULY 2012,https://digital-land.github.io/conservation-area/local-authority-eng/MOL/LEA-Area-1---LEATHERHEAD-Extension-JULY-2012
-/conservation-area/local-authority-eng/MOL/LEA-MV23f-LEATHERHEAD-CONSERVATION-AREA-WHOLE-EXTENT,MV23f LEATHERHEAD CONSERVATION AREA WHOLE EXTENT,conservation-area:LEA MV23f LEATHERHEAD CONSERVATION AREA WHOLE EXTENT,https://digital-land.github.io/conservation-area/local-authority-eng/MOL/LEA-MV23f-LEATHERHEAD-CONSERVATION-AREA-WHOLE-EXTENT
 ,,,
 /conservation-area/local-authority-eng/MOL/LEA-Area-2---LEATHERHEAD-Extension-JULY-2012,Area 2 - LEATHERHEAD Extension JULY 2012,conservation-area:LEA Area 2 - LEATHERHEAD Extension JULY 2012,https://digital-land.github.io/conservation-area/local-authority-eng/MOL/LEA-Area-2---LEATHERHEAD-Extension-JULY-2012
 ,,,
@@ -5315,18 +5286,6 @@ slug,name,geography,url
 /conservation-area/local-authority-eng/MOL/LEA-MV23d-LEATHERHEAD-25TH-APRIL-1995,MV23d LEATHERHEAD 25TH APRIL 1995,conservation-area:LEA MV23d LEATHERHEAD 25TH APRIL 1995,https://digital-land.github.io/conservation-area/local-authority-eng/MOL/LEA-MV23d-LEATHERHEAD-25TH-APRIL-1995
 ,,,
 /conservation-area/local-authority-eng/MOL/LEA-MV23e-LEATHERHEAD-21ST-JANUARY-1998,MV23e LEATHERHEAD 21ST JANUARY 1998,conservation-area:LEA MV23e LEATHERHEAD 21ST JANUARY 1998,https://digital-land.github.io/conservation-area/local-authority-eng/MOL/LEA-MV23e-LEATHERHEAD-21ST-JANUARY-1998
-,,,
-/conservation-area/local-authority-eng/SHF/1,1,conservation-area:1,https://digital-land.github.io/conservation-area/local-authority-eng/SHF/1
-/conservation-area/national-park-authority/Q72617988/231,Upper Midhope,conservation-area:231,https://digital-land.github.io/conservation-area/national-park-authority/Q72617988/231
-,,,
-/conservation-area/local-authority-eng/SHF/2,2,conservation-area:2,https://digital-land.github.io/conservation-area/local-authority-eng/SHF/2
-/conservation-area/national-park-authority/Q72617988/232,Langsett,conservation-area:232,https://digital-land.github.io/conservation-area/national-park-authority/Q72617988/232
-,,,
-/conservation-area/local-authority-eng/SHF/9,9,conservation-area:9,https://digital-land.github.io/conservation-area/local-authority-eng/SHF/9
-/conservation-area/national-park-authority/Q72617988/133,Bolsterstone,conservation-area:133,https://digital-land.github.io/conservation-area/national-park-authority/Q72617988/133
-,,,
-/conservation-area/local-authority-eng/WND/COA00001010,Battersea Park COA00001010,conservation-area:COA00001010,https://digital-land.github.io/conservation-area/local-authority-eng/WND/COA00001010
-/conservation-area/local-authority-eng/WND/COA00000356,Battersea Park Cons Area COA00000356,conservation-area:COA00000356,https://digital-land.github.io/conservation-area/local-authority-eng/WND/COA00000356
 ,,,
 /conservation-area/local-authority-eng/WNM/Cookham-Hiigh-Street,Cookham Hiigh Street,conservation-area:Cookham Hiigh Street,https://digital-land.github.io/conservation-area/local-authority-eng/WNM/Cookham-Hiigh-Street
 /conservation-area/local-authority-eng/WNM/conservation-areas,Cookham Hiigh Street,conservation-area:conservation_areas,https://digital-land.github.io/conservation-area/local-authority-eng/WNM/conservation-areas
