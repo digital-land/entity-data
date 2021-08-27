@@ -18,10 +18,11 @@ for row in csv.DictReader(open("dataset/endpoint.csv", newline="")):
 for row in csv.DictReader(open("dataset/source.csv", newline="")):
     endpoint = row["endpoint"]
 
-    # add collection and pipelines to each endpoint
-    for pipeline in row["pipelines"].split(";"):
-        endpoints[endpoint]["pipelines"][pipeline] = True
-        endpoints[endpoint]["collection"] = row["collection"]
+    if endpoint:
+        # add collection and pipelines to each endpoint
+        for pipeline in row["pipelines"].split(";"):
+            endpoints[endpoint]["pipelines"][pipeline] = True
+            endpoints[endpoint]["collection"] = row["collection"]
 
 # load resources
 for row in csv.DictReader(open("dataset/resource.csv", newline="")):
