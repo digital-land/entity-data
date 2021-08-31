@@ -1,6 +1,7 @@
 endpoint,endpoint-url,parameters,plugin,entry-date,start-date,end-date
 a623eb0a63ee1bbdb778f6e83ea2e10271596aafebacfcd40272409d404b8e30,https://opendata.arcgis.com/datasets/a14064ca50e242c4a92d020764a6d9df_0.geojson,,,2021-05-26,,
 4ecea72eff7de59214fa5919fa011081919d523601656fabd053e2a5e19fa96d,https://opendata.arcgis.com/datasets/6f2ad07d91304ad79cdecd52489d5046_0.geojson,,,,2021-05-25,
+a87e5975ea7cddd88764f557ad4880e06b58a480cb7bace2da8bcf3c1e5c92ba,https://raw.githubusercontent.com/digital-land/article-4-direction-collection/main/data/article-4-directions.csv,,,2021-01-29,,
 000a05de97fae4ea6e8c7ebbb6adf7ed07f595ef5cf322a620503c4a3113fd0d,http://www.wyre.gov.uk/download/downloads/id/5527/wyre_council_brownfield_register_september_2019.csv,,,,,2020-07-08
 001a20438f6d8a3e0ae901fbff576fb64dcd41b223939094e7d38d363c94b2da,https://www.dorsetforyou.gov.uk/media/224215/Weymouth--Portland-Borough-Council---Brownfield-Register-3rd-December-2017/doc/20171219_WPBC_SHELAA_Export.csv,,,,,2019-03-31
 0023c2787bdf5bff507076999e29f6de9063e18a2b3e0a8e424b92673a122db4,https://liverpool.gov.uk/media/1356598/blr-2018-schedule-no376sites-gis-data-excsiteplanurl-final-010319.xlsx,,,,,
