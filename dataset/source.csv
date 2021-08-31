@@ -1,6 +1,6 @@
 attribution,collection,documentation-url,endpoint,licence,organisation,pipelines,entry-date,start-date,end-date
-,ancient-woodland,,a623eb0a63ee1bbdb778f6e83ea2e10271596aafebacfcd40272409d404b8e30,,,ancient-woodland,2021-05-26,,
-,area-of-outstanding-natural-beauty,https://naturalengland-defra.opendata.arcgis.com/datasets/areas-of-outstanding-natural-beauty-england,4ecea72eff7de59214fa5919fa011081919d523601656fabd053e2a5e19fa96d,,,area-of-outstanding-natural-beauty,,,
+natural-england,ancient-woodland,https://data.gov.uk/dataset/9461f463-c363-4309-ae77-fdcd7e9df7d3/ancient-woodland-england,a623eb0a63ee1bbdb778f6e83ea2e10271596aafebacfcd40272409d404b8e30,ogl3,government-organisation:PB202,ancient-woodland,2021-05-26,2021-04-30,
+natural-england,area-of-outstanding-natural-beauty,https://naturalengland-defra.opendata.arcgis.com/datasets/areas-of-outstanding-natural-beauty-england,4ecea72eff7de59214fa5919fa011081919d523601656fabd053e2a5e19fa96d,ogl3,government-organisation:PB202,area-of-outstanding-natural-beauty,2021-05-25,2020-09-01,
 ,brownfield-land,,5d30aee8c82e775dd4be67dd417bf782b33de8522edc1e9bd45c28d26e27ae49,,development-corporation:Q20648596,brownfield-land,,2017-12-31,
 ,brownfield-land,https://www.london.gov.uk/about-us/organisations-we-work/old-oak-and-park-royal-development-corporation-opdc/opdc-planning/planning-policy-0/brownfield-land-register,a16e45dbefe2d67a6d27c086768b6c3610d4e057bb19627da0cbdb13e3f0d2cd,,development-corporation:Q20648596,brownfield-land,,,
 ,brownfield-land,https://www.queenelizabetholympicpark.co.uk/planning-authority/planning-policy/brownfield-land-register,58a42ab25e8f24f7dd80b3f0da920be961950bb45442f10feecc42fa73c404eb,,development-corporation:Q6670544,brownfield-land,,2019-12-31,
@@ -1363,7 +1363,7 @@ historic-england,historic-england,https://historicengland.org.uk/listing/the-lis
 ,ownership-status,,0589435552d70c574ab42d4542032a986cf6090b7fe6257ce46fdee3f2a9b938,,,ownership-status,2021-03-26,,
 ,parish,,2fe69293c0911843f5ca04d2b8a34b3e4f5cc412f64cc06cb69c7753efa3785a,,government-organisation:D303,parish,2021-01-11,,
 ,planning-permission-status,,62c0f319c2dd048f7e0aebaae669415e577f6fcf7491a030ccd472d1e43d3526,,,planning-permission-status,2021-03-26,,
-natural-england,ramsar,,adda9e832e261750d954313b03d2d6cd54d06ea951de78e45405429ebef6bcd0,ogl3,government-organisation:PB202,ramsar,2021-06-10,,
+natural-england,ramsar,https://data.gov.uk/dataset/67b4ef48-d0b2-4b6f-b659-4efa33469889/ramsar-england,adda9e832e261750d954313b03d2d6cd54d06ea951de78e45405429ebef6bcd0,ogl3,government-organisation:PB202,ramsar,2021-06-10,2020-10-22,
 ,site-category,,4961c47a4f839e614d377e14b65eba0a397c1b7f32b896184d6925f362692b29,,,site-category,2021-05-13,,
 ,site-of-special-scientific-interest,,ffced0fab18bf0d23cb58e47f85a1032f6cf8fa738b5d0d694e8f2c0bd77c87c,,,site-of-special-scientific-interest,2021-05-27,,
 ,special-area-of-conservation,,743ed98a0aba5abf403270e33de79631e7cebf8235c5ee5f95efaafe725794c4,,,special-area-of-conservation,2021-06-01T09:09:19:09Z,,
