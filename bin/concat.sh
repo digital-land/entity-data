@@ -2,11 +2,11 @@
 
 for file in endpoint.csv source.csv log.csv resource.csv
 do
-    csvstack var/collection/*/$file > dataset/$file
+    csvstack var/collection/*/$file | python3 bin/fixdates.py dataset/$file
 done
 
-for file in column.csv concat.csv convert.csv default.csv patch.csv plugins.py skip.csv transform.csv
+for file in column.csv concat.csv convert.csv default.csv patch.csv skip.csv transform.csv
 do
-    csvstack var/pipeline/*/$file > dataset/$file
+    csvstack var/pipeline/*/$file | python3 bin/fixdates.py dataset/$file
 done
 
