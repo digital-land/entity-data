@@ -122,9 +122,9 @@ brownfield-site,,SiteReference,reference
 brownfield-site,,siterefere,reference
 brownfield-site,,SiteNameAddress,name
 brownfield-site,,sitenamead,name
-brownfield-site,FirstAddedDate,start-date
-brownfield-site,LastUpdatedDate,entry-date
-brownfield-site,EndDate,end-date
+brownfield-site,FirstAddedDate,start-date,
+brownfield-site,LastUpdatedDate,entry-date,
+brownfield-site,EndDate,end-date,
 conservation-area,,WKT,geometry
 conservation-area,f3969617c89ddb64fee83ce19fb5628301f0e1f853159ee6057958693d806da7,id,name
 conservation-area,bd5a54fc8d0377744c5f5c53d6235337e1e9b92aa8552de0e47b414b21d54e76,id,name
