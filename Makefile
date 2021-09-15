@@ -7,9 +7,9 @@ first-pass::
 	mkdir -p dataset/
 	bin/download.sh
 	bin/concat.sh
-	#bin/download-issues.sh
-	#bin/download-resources.sh
-	#python3 bin/concat-issues.py
+	bin/download-issues.sh
+	bin/download-resources.sh
+	python3 bin/concat-issues.py
 
 second-pass::	digital-land.db
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+#set -e
 
 s3="https://collection-dataset.s3.eu-west-2.amazonaws.com/"
 
@@ -18,5 +18,3 @@ do
         set +x
     fi
 done
-
-#csvstack var/issue/*/*.csv > dataset/issue.csv

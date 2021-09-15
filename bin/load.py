@@ -37,7 +37,7 @@ tables = {
     "source": "dataset",
     "transform": "dataset",
     "log": "dataset",
-    #"issue": "dataset",
+    "issue": "dataset",
 }
 
 
@@ -83,7 +83,7 @@ class Model:
         self.connection.close()
 
     def create_table(self, table, fields, key_field=None, field_datatype={}):
-        cmd = "CREATE TABLE %s (%s%s)" % (
+        self.execute("CREATE TABLE %s (%s%s)" % (
             colname(table),
             ",\n".join(
                 [
@@ -107,12 +107,8 @@ class Model:
                     for field in fields if field in tables and field != table
                 ]
             ),
-        )
+        ))
 
-        if debug:
-            print(cmd)
-
-        self.connection.execute(cmd)
 
     def create_cursor(self):
         self.cursor = self.connection.cursor()
@@ -120,8 +116,15 @@ class Model:
         self.cursor.execute("PRAGMA journal_mode = OFF")
 
     def commit(self):
-        print("committing ..")
+        if debug:
+            print("committing ..")
+
         self.connection.commit()
+
+    def execute(self, cmd):
+        if debug:
+            print(cmd)
+        self.cursor.execute(cmd)
 
     def load(self, path, table, fields):
         print("loading %s from %s" % (table, path))
@@ -135,10 +138,14 @@ class Model:
                 ",".join(['"%s"' % row.get(field, "").replace('"', '""') for field in fields]),
             )
 
-            if debug:
-                print(cmd)
+            self.execute(cmd)
 
-            self.cursor.execute(cmd)
+    def index(self, table, fields, name=None):
+        if not name:
+            name = table + "_index"
+        print("creating index %s" % (name))
+        cols = [colname(field) for field in fields]
+        self.execute("CREATE INDEX IF NOT EXISTS %s on %s (%s);" % (name, table, ", ".join(cols)))
 
 
 if __name__ == "__main__":
@@ -148,7 +155,7 @@ if __name__ == "__main__":
 
     model = Model()
 
-    db = sys.argv[1] if len(sys.argv) > 1 else "collection.db"
+    db = sys.argv[1] if len(sys.argv) > 1 else "digital-land.db"
 
     if os.path.exists(db):
         os.remove(db)
@@ -160,10 +167,15 @@ if __name__ == "__main__":
         fields = specification.schema[table]["fields"]
         key_field = specification.schema[table]["key-field"] or table
         field_datatype = {field: specification.field["datatype"] for field in fields}
+
+        model.create_cursor()
         model.create_table(table, fields, key_field, field_datatype)
+        model.commit()
 
         model.create_cursor()
         model.load(path, table, fields)
         model.commit()
+
+    model.index("issue", ["resource", "pipeline", "row-number", "issue-type"])
 
     model.disconnect()
