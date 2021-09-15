@@ -18,3 +18,9 @@ var/
 
 # ignore updated specification files
 specification/
+
+# ignore large issue file
+dataset/issue.csv
+
+# ignore databases
+*.db

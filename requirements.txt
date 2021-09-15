@@ -1,4 +1,7 @@
+black
+flake8
 python-magic==0.4.24
+datasette
 csvkit
 chardet
 PyPDF2
