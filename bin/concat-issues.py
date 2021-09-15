@@ -12,7 +12,7 @@ w.writeheader()
 
 for path in glob.glob('var/issue/*/*.csv'):
 
-    m = re.search(r'(\w+)/(\w+).csv$', path)
+    m = re.search(r'/([a-zA-Z0-9_-]+)/([a-f0-9]+).csv$', path)
     pipeline = m.group(1)
     resource = m.group(2)
 
