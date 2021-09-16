@@ -1,6 +1,8 @@
 #!/bin/sh
 
-for file in endpoint.csv source.csv log.csv resource.csv
+python3 bin/concat-source.py | python3 bin/fixdates.py dataset/source.csv
+
+for file in endpoint.csv log.csv resource.csv
 do
     csvstack var/collection/*/$file | python3 bin/fixdates.py dataset/$file
 done
