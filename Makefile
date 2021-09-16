@@ -1,7 +1,7 @@
 include makerules/makerules.mk
 include makerules/pipeline.mk
 
-DB=digital-land.db
+DB=digital-land.sqlite3
 
 first-pass::
 	mkdir -p dataset/
@@ -11,14 +11,14 @@ first-pass::
 	bin/download-resources.sh
 	python3 bin/concat-issues.py
 
-second-pass::	digital-land.db
+second-pass::	$(DB)
 
-digital-land.db:	bin/load.py
+$(DB):	bin/load.py
 	@rm -f $@
 	python3 bin/load.py $@
 
-datasette:	digital-land.db
-	datasette serve digital-land.db
+datasette:	$(DB)
+	datasette serve $(DB)
 
 clean::
 	rm -rf ./var
@@ -26,4 +26,4 @@ clean::
 clobber::
 	rm -rf var/collection/
 	rm -rf dataset/
-	rm -rf collection.db
+	rm -rf $(DB)
