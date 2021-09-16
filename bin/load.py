@@ -36,8 +36,8 @@ tables = {
     "skip": "dataset",
     "source": "dataset",
     "transform": "dataset",
-    #"log": "dataset",
-    #"issue": "dataset",
+    "log": "dataset",
+    "issue": "dataset",
 }
 
 
@@ -176,6 +176,6 @@ if __name__ == "__main__":
         model.load(path, table, fields)
         model.commit()
 
-    #model.index("issue", ["resource", "pipeline", "row-number", "issue-type"])
+    model.index("issue", ["resource", "pipeline", "row-number", "field", "issue-type"])
 
     model.disconnect()
