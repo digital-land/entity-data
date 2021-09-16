@@ -10,11 +10,9 @@ import sqlite3
 debug = True
 debug = False
 
-# TBD: 
+# TBD:
 # - take this config from specification for data-packages
-# - make each package a separate database collection, pipeline, log
-# - add refereces
-# - build many-to-many tables from [n] lists and join tables (schema-field)
+# - add refereces for fields such as parent-field
 tables = {
     "organisation": "var/cache",
     "collection": "specification",
@@ -83,32 +81,35 @@ class Model:
         self.connection.close()
 
     def create_table(self, table, fields, key_field=None, field_datatype={}):
-        self.execute("CREATE TABLE %s (%s%s)" % (
-            colname(table),
-            ",\n".join(
-                [
-                    "%s %s%s"
-                    % (
-                        colname(field),
-                        coltype(field_datatype[field]),
-                        (" PRIMARY KEY" if field == key_field else "")
-                    )
-                    for field in fields
-                ]
-            ),
-            "\n".join(
-                [
-                    ", FOREIGN KEY (%s) REFERENCES %s (%s)"
-                    % (
-                        colname(field),
-                        colname(field),
-                        colname(field),
-                    )
-                    for field in fields if field in tables and field != table
-                ]
-            ),
-        ))
-
+        self.execute(
+            "CREATE TABLE %s (%s%s)"
+            % (
+                colname(table),
+                ",\n".join(
+                    [
+                        "%s %s%s"
+                        % (
+                            colname(field),
+                            coltype(field_datatype[field]),
+                            (" PRIMARY KEY" if field == key_field else ""),
+                        )
+                        for field in fields
+                    ]
+                ),
+                "\n".join(
+                    [
+                        ", FOREIGN KEY (%s) REFERENCES %s (%s)"
+                        % (
+                            colname(field),
+                            colname(field),
+                            colname(field),
+                        )
+                        for field in fields
+                        if field in tables and field != table
+                    ]
+                ),
+            )
+        )
 
     def create_cursor(self):
         self.cursor = self.connection.cursor()
@@ -126,26 +127,38 @@ class Model:
             print(cmd)
         self.cursor.execute(cmd)
 
+    def insert(self, table, fields, row):
+        self.execute("""
+            INSERT OR REPLACE INTO %s(%s)
+            VALUES (%s);
+            """ % (
+            colname(table),
+            ",".join([colname(field) for field in fields]),
+            ",".join(
+                ['"%s"' % row.get(field, "").replace('"', '""') for field in fields]
+            ),
+        ))
+
     def load(self, path, table, fields):
         print("loading %s from %s" % (table, path))
         for row in csv.DictReader(open(path, newline="")):
-            cmd = """
-                INSERT OR REPLACE INTO %s(%s)
-                VALUES (%s);
-                """ % (
-                colname(table),
-                ",".join([colname(field) for field in fields]),
-                ",".join(['"%s"' % row.get(field, "").replace('"', '""') for field in fields]),
-            )
+            self.insert(table, fields, row)
 
-            self.execute(cmd)
+    def load_join(self, path, table, fields, split_field=None, field=None):
+        print("loading %s from %s" % (table, path))
+        for row in csv.DictReader(open(path, newline="")):
+            for value in row[split_field].split(";"):
+                row[field] = value
+                self.insert(table, fields, row)
 
     def index(self, table, fields, name=None):
         if not name:
             name = table + "_index"
         print("creating index %s" % (name))
         cols = [colname(field) for field in fields]
-        self.execute("CREATE INDEX IF NOT EXISTS %s on %s (%s);" % (name, table, ", ".join(cols)))
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS %s on %s (%s);" % (name, table, ", ".join(cols))
+        )
 
 
 if __name__ == "__main__":
@@ -168,6 +181,23 @@ if __name__ == "__main__":
         key_field = specification.schema[table]["key-field"] or table
         field_datatype = {field: specification.field["datatype"] for field in fields}
 
+        # make a many-to-many table for each list
+        joins = {}
+        for field in fields:
+            if (
+                specification.field[field]["cardinality"] == "n"
+                and "%s|%s"
+                % (
+                    table,
+                    field,
+                )
+                not in ["concat|fields", "convert|parameters", "endpoint|parameters"]
+            ):
+                parent_field = specification.field[field]["parent-field"]
+                joins[field] = parent_field
+                field_datatype[parent_field] = specification.field[parent_field]["datatype"]
+                fields.remove(field)
+
         model.create_cursor()
         model.create_table(table, fields, key_field, field_datatype)
         model.commit()
@@ -175,6 +205,17 @@ if __name__ == "__main__":
         model.create_cursor()
         model.load(path, table, fields)
         model.commit()
+
+        for split_field, field in joins.items():
+            join_table = "%s_%s" % (table, field)
+
+            model.create_cursor()
+            model.create_table(join_table, [table, field], None, field_datatype)
+            model.commit()
+
+            model.create_cursor()
+            model.load_join(path, join_table, [table, field], split_field=split_field, field=field)
+            model.commit()
 
     model.index("issue", ["resource", "pipeline", "row-number", "field", "issue-type"])
 
