@@ -36,8 +36,8 @@ tables = {
     "skip": "dataset",
     "source": "dataset",
     "transform": "dataset",
-    "log": "dataset",
-    "issue": "dataset",
+    #"log": "dataset",
+    #"issue": "dataset",
 }
 
 
@@ -91,7 +91,7 @@ class Model:
                     % (
                         colname(field),
                         coltype(field_datatype[field]),
-                        (" PRIMARY KEY" if field == key_field and field not in ["source"] else "")
+                        (" PRIMARY KEY" if field == key_field else "")
                     )
                     for field in fields
                 ]
@@ -176,6 +176,6 @@ if __name__ == "__main__":
         model.load(path, table, fields)
         model.commit()
 
-    model.index("issue", ["resource", "pipeline", "row-number", "issue-type"])
+    #model.index("issue", ["resource", "pipeline", "row-number", "issue-type"])
 
     model.disconnect()
