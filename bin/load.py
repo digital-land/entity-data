@@ -16,6 +16,7 @@ debug = False
 tables = {
     "organisation": "var/cache",
     "collection": "specification",
+    "typology": "specification",
     "dataset": "specification",
     "dataset-schema": "specification",
     "datatype": "specification",
@@ -23,7 +24,6 @@ tables = {
     "pipeline": "specification",
     "schema": "specification",
     "schema-field": "specification",
-    "typology": "specification",
     "column": "dataset",
     "concat": "dataset",
     "convert": "dataset",
@@ -142,6 +142,9 @@ class Model:
     def load(self, path, table, fields):
         print("loading %s from %s" % (table, path))
         for row in csv.DictReader(open(path, newline="")):
+            for field in row:
+                if row.get(field, None) is None:
+                    row[field] = ""
             self.insert(table, fields, row)
 
     def load_join(self, path, table, fields, split_field=None, field=None):
