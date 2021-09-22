@@ -17,6 +17,4 @@ do
         curl -qsfL $flags "$s3$collection-collection/collection/resource/$resource" > $path
         set +x
     fi
-
-    # python3 bin/filetype.py $path
 done
