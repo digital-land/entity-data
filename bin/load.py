@@ -80,9 +80,9 @@ class Model:
     def disconnect(self):
         self.connection.close()
 
-    def create_table(self, table, fields, key_field=None, field_datatype={}):
+    def create_table(self, table, fields, key_field=None, field_datatype={}, unique=None):
         self.execute(
-            "CREATE TABLE %s (%s%s)"
+            "CREATE TABLE %s (%s%s%s)"
             % (
                 colname(table),
                 ",\n".join(
@@ -106,8 +106,9 @@ class Model:
                         )
                         for field in fields
                         if field in tables and field != table
-                    ]
+                    ],
                 ),
+                "" if not unique else ", UNIQUE(%s)" % (",".join(unique))
             )
         )
 
@@ -213,7 +214,7 @@ if __name__ == "__main__":
             join_table = "%s_%s" % (table, field)
 
             model.create_cursor()
-            model.create_table(join_table, [table, field], None, field_datatype)
+            model.create_table(join_table, [table, field], None, field_datatype, unique=[table, field])
             model.commit()
 
             model.create_cursor()
