@@ -20,6 +20,7 @@ tables = {
     "dataset": "specification",
     "dataset-schema": "specification",
     "datatype": "specification",
+    "theme": "specification",
     "field": "specification",
     "pipeline": "specification",
     "schema": "specification",
