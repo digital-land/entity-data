@@ -223,5 +223,8 @@ if __name__ == "__main__":
             model.commit()
 
     model.index("issue", ["resource", "pipeline", "row-number", "field", "issue-type"])
+    model.index("source", ["endpoint"])
+    model.index("log", ["endpoint"])
+    model.index("resource_endpoint", ["endpoint", "resource"])
 
     model.disconnect()
