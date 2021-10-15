@@ -1,5 +1,7 @@
 # A spike on creating Digital Land Entities
 
+[![Build digital-land database](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml/badge.svg)](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml)
+
 Seed data for creating a stable identifier for a Digital Land entity from the view model and collections.
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/digital-land/entity-data/blob/master/LICENSE)
