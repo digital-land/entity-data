@@ -28,6 +28,3 @@ clobber::
 	rm -rf var/collection/
 	rm -rf dataset/
 	rm -rf $(DB)
-
-upload::
-	aws-vault exec dl-dev -- aws s3 cp digital-land.sqlite3 s3://digital-land-collection
