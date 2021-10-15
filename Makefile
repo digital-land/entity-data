@@ -2,14 +2,14 @@ include makerules/makerules.mk
 include makerules/pipeline.mk
 include makerules/datapackage.mk
 
-DB=digital-land.sqlite3
+DB=dataset/digital-land.sqlite3
 
 first-pass::
 	mkdir -p dataset/
 	bin/download.sh
 	bin/concat.sh
 	bin/download-issues.sh
-	bin/download-resources.sh
+	#bin/download-resources.sh
 	python3 bin/concat-issues.py
 
 second-pass::	$(DB)
