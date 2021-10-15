@@ -1,6 +1,7 @@
 # A spike on creating Digital Land Entities
 
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/digital-land/entity-data/blob/master/LICENSE) [![Build digital-land database](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml/badge.svg)](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/digital-land/digital-land-builder/blob/master/LICENSE)
+[![Build digital-land database](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml/badge.svg)](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml)
 
 Assembles the specification, collection sources, endpoints, logs with configuration and issues from the piplelines into a single digital-land sqlite3 database.
 
