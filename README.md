@@ -1,4 +1,4 @@
-# A spike on creating Digital Land Entities
+# Build the digital-land database
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/digital-land/digital-land-builder/blob/master/LICENSE)
 [![Build digital-land database](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml/badge.svg)](https://github.com/digital-land/digital-land-builder/actions/workflows/run.yml)
