@@ -6,7 +6,8 @@ DB=dataset/digital-land.sqlite3
 
 first-pass::
 	mkdir -p dataset/
-	bin/download.sh
+	bin/download-collection.sh
+	bin/download-pipeline.sh
 	bin/concat.sh
 	bin/download-issues.sh
 	#bin/download-resources.sh
@@ -25,6 +26,7 @@ clean::
 	rm -rf ./var
 
 clobber::
-	rm -rf var/collection/
+	rm -rf var/collection
+	rm -rf var/pipeline
 	rm -rf dataset/
 	rm -rf $(DB)

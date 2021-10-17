@@ -37,6 +37,8 @@ tables = {
     "transform": "dataset",
     "log": "dataset",
     "issue": "dataset",
+    "filter": "dataset",
+    "lookup": "dataset",
 }
 
 

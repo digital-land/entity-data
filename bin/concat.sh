@@ -7,8 +7,10 @@ do
     csvstack var/collection/*/$file | python3 bin/fixdates.py dataset/$file
 done
 
-for file in column.csv concat.csv convert.csv default.csv patch.csv skip.csv transform.csv
+for file in column.csv concat.csv convert.csv default.csv patch.csv skip.csv transform.csv filter.csv lookup.csv
 do
-    csvstack var/pipeline/*/$file | python3 bin/fixdates.py dataset/$file
+    set -x
+    csvstack $(find var/pipeline/ -name $file -size +0) | python3 bin/fixdates.py dataset/$file
+    set +x
 done
 
