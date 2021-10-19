@@ -1,6 +1,7 @@
 include makerules/makerules.mk
 include makerules/pipeline.mk
 include makerules/datapackage.mk
+include makerules/development.mk
 
 DB=dataset/digital-land.sqlite3
 
