@@ -5,7 +5,7 @@
 import os
 import sys
 import csv
-from digital_land.datapackage.sqlite import SqlitePackage
+from digital_land.package.sqlite import SqlitePackage
 
 
 tables = {
