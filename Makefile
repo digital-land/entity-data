@@ -34,3 +34,6 @@ clobber::
 
 aws-build::
 	aws batch submit-job --job-name digital-land-db-$(shell date '+%Y-%m-%d-%H-%M-%S') --job-queue dl-batch-queue --job-definition dl-batch-def --container-overrides '{"environment": [{"name":"BATCH_FILE_S3_URL","value":"s3://dl-batch-scripts/digital-land-builder.sh"}]}'
+
+push-dataset::
+	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
