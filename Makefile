@@ -31,3 +31,6 @@ clobber::
 	rm -rf var/pipeline
 	rm -rf dataset/
 	rm -rf $(DB)
+
+aws-build::
+	aws batch submit-job --job-name digital-land-db-$(shell date '+%Y-%m-%d-%H-%M-%S') --job-queue dl-batch-queue --job-definition dl-batch-def --container-overrides '{"environment": [{"name":"BATCH_FILE_S3_URL","value":"s3://dl-batch-scripts/digital-land-builder.sh"}]}'
