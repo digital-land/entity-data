@@ -33,7 +33,7 @@ clobber::
 	rm -rf $(DB)
 
 aws-build::
-	aws batch submit-job --job-name digital-land-db-$(shell date '+%Y-%m-%d-%H-%M-%S') --job-queue dl-batch-queue --job-definition dl-batch-def --container-overrides '{"environment": [{"name":"BATCH_FILE_S3_URL","value":"s3://dl-batch-scripts/builder_run.sh"}, {"name" : "REPOSITORY","value" : "digital-land-builder"}]}'
+	aws batch submit-job --job-name digital-land-db-$(shell date '+%Y-%m-%d-%H-%M-%S') --job-queue dl-batch-queue --job-definition dl-batch-def --container-overrides '{"environment": [{"name":"BATCH_FILE_URL","value":"https://raw.githubusercontent.com/digital-land/docker-builds/main/builder_run.sh"}, {"name" : "REPOSITORY","value" : "digital-land-builder"}]}'
 
 push::
 	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
