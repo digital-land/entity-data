@@ -33,5 +33,20 @@ jobs:
         git checkout ${GITHUB_REF##*/}
 
         '
-    - name: Submit build job on AWS Batch
-      run:  make aws-build
+    - name: Update makerules
+      run: make makerules
+
+    - name: Commit updated makerules
+      run: make commit-makerules
+
+    - name: Install dependencies
+      run: make init
+
+    - name: Clobber dataset
+      run: make clobber
+
+    - name: Build dataset
+      run: make
+
+    - name: Push dataset files to S3
+      run: make push-dataset-s3
