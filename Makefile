@@ -20,9 +20,6 @@ $(DB):	bin/load.py
 	@rm -f $@
 	python3 bin/load.py $@
 
-datasette:	$(DB)
-	datasette serve $(DB)
-
 clean::
 	rm -rf ./var
 
