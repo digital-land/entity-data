@@ -32,13 +32,11 @@ tables = {
     "source": "dataset",
     "transform": "dataset",
     "log": "dataset",
-    "issue": "dataset",
     "filter": "dataset",
     "lookup": "dataset",
 }
 
 indexes = {
-    "issue": ["resource", "pipeline", "row-number", "field", "issue-type"],
     "source": ["endpoint"],
     "log": ["endpoint"],
     "resource_endpoint": ["endpoint", "resource"],
