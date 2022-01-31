@@ -4,7 +4,7 @@ import glob
 import csv
 
 
-for path in glob.glob('var/issue/*/*.csv'):
+for path in glob.glob("var/issue/*/*.csv"):
     seen = {}
     for row in csv.DictReader(open(path, newline="")):
         key = row["row-number"] + "," + row["field"]

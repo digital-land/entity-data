@@ -40,5 +40,5 @@ if __name__ == "__main__":
         if slug:
             print(slug)
 
-    #load("policy")
-    #load("document")
+    # load("policy")
+    # load("document")
