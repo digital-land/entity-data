@@ -47,5 +47,5 @@ if __name__ == "__main__":
     level = logging.INFO
     logging.basicConfig(level=level, format="%(asctime)s %(levelname)s %(message)s")
     path = sys.argv[1] if len(sys.argv) > 1 else "dataset/digital-land.sqlite3"
-    package = SqlitePackage("digital-land", tables=tables, indexes=indexes)
-    package.create(path)
+    package = SqlitePackage("digital-land", path=path, tables=tables, indexes=indexes)
+    package.create()
