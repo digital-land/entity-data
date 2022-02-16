@@ -18,7 +18,6 @@ tables = {
     "datatype": "specification",
     "theme": "specification",
     "field": "specification",
-    "pipeline": "specification",
     "schema": "specification",
     "schema-field": "specification",
     "column": "dataset",
