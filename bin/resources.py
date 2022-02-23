@@ -44,7 +44,7 @@ for row in csv.DictReader(open("dataset/resource.csv", newline="")):
         for pipeline in endpoints[endpoint]["pipelines"]:
             resources[resource]["pipelines"][pipeline] = True
 
-# https://collection-dataset.s3.eu-west-2.amazonaws.com/{COLLECTION}-collection/issue/{PIPELINE}/{RESOURCE}.csv
+# https://digital-land-production-collection-dataset.s3.eu-west-2.amazonaws.com/{COLLECTION}-collection/issue/{PIPELINE}/{RESOURCE}.csv
 for resource in resources:
     collection = resources[resource]["collection"]
     for pipeline in resources[resource]["pipelines"]:
