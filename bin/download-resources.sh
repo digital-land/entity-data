@@ -2,12 +2,12 @@
 
 set -e
 
-s3="https://collection-dataset.s3.eu-west-2.amazonaws.com/"
+s3="https://digital-land-production-collection-dataset.s3.eu-west-2.amazonaws.com/"
 
 python3 bin/resources.py |
 while read collection pipeline resource
 do
-    # https://collection-dataset.s3.eu-west-2.amazonaws.com/{COLLECTION}-collection/resource/{RESOURCE}
+    # https://digital-land-production-collection-dataset.s3.eu-west-2.amazonaws.com/{COLLECTION}-collection/resource/{RESOURCE}
     dir=var/resource
     path=$dir/$resource
 
