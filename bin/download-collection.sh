@@ -2,7 +2,7 @@
 
 set -e
 
-github="https://raw.githubusercontent.com/digital-land/"
+s3="https://digital-land-production-collection-dataset.s3.eu-west-2.amazonaws.com/"
 
 csvcut -c collection specification/collection.csv | tail -n +2 |
 while read collection
@@ -14,7 +14,7 @@ do
         if [ ! -f $path ] ; then
             mkdir -p $dir
             set -x
-            curl -qsfL $flags -o $path "$github$collection-collection/main/collection/$file"
+            curl -qsfL $flags -o $path "$s3$collection-collection/collection/$file"
             set +x
         fi
     done
