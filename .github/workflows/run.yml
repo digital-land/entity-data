@@ -56,5 +56,5 @@ jobs:
     - name: Build dataset
       run: make
 
-    - name: Push dataset files to S3
-      run: make push-dataset-s3
+    - name: Save datasets to S3
+      run: make save-dataset
