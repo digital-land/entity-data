@@ -7,7 +7,7 @@ s3="https://digital-land-production-collection-dataset.s3.eu-west-2.amazonaws.co
 csvcut -c collection specification/collection.csv | tail -n +2 |
 while read collection
 do
-    for file in endpoint.csv source.csv log.csv resource.csv
+    for file in endpoint.csv source.csv log.csv resource.csv old-resource.csv
     do
         dir=var/collection/$collection
         path=var/collection/$collection/$file

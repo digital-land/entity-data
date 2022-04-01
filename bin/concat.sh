@@ -3,7 +3,7 @@
 set -e
 
 python3 bin/concat-source.py | python3 bin/fixdates.py dataset/source.csv
-for file in endpoint.csv log.csv resource.csv
+for file in endpoint.csv log.csv resource.csv old-resource.csv
 do
     set -x
     python3 bin/csvcat.py var/collection/*/$file | python3 bin/fixdates.py dataset/$file

@@ -26,6 +26,7 @@ tables = {
     "default": "dataset",
     "endpoint": "dataset",
     "patch": "dataset",
+    "old-resource": "dataset",
     "resource": "dataset",
     "skip": "dataset",
     "source": "dataset",
