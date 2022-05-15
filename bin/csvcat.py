@@ -31,5 +31,6 @@ for path in paths:
             # migrate pipeline to dataset
             if "dataset" in fieldnames and not line.get("dataset", ""):
                 line["dataset"] = line.get("pipeline", "")
+                del line["pipeline"]
 
             writer.writerow(line)
