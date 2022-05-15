@@ -20,6 +20,8 @@ var/
 specification/
 
 # ignore generated dataset files
+collection/
+pipeline/
 dataset/
 
 # ignore databases

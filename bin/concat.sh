@@ -2,18 +2,21 @@
 
 set -e
 
-python3 bin/concat-source.py | python3 bin/fixdates.py dataset/source.csv
-for file in endpoint.csv log.csv resource.csv old-resource.csv
+mkdir -p collection/
+for table in source endpoint log resource old-resource
 do
+    file=$table.csv
     set -x
-    python3 bin/csvcat.py var/collection/*/$file | python3 bin/fixdates.py dataset/$file
+    python3 bin/csvcat.py $table collection/$file var/collection/*/$file
     set +x
 done
 
-for file in column.csv concat.csv convert.csv default.csv patch.csv skip.csv transform.csv filter.csv lookup.csv
+mkdir -p pipeline/
+for table in column concat convert default default-value patch skip transform filter lookup
 do
+    file=$table.csv
     set -x
-    python3 bin/csvcat.py $(find var/pipeline/ -name $file -size +0) | python3 bin/fixdates.py dataset/$file
+    python3 bin/csvcat.py $table pipeline/$file $(find var/pipeline/ -name $file -size +0)
     set +x
 done
 

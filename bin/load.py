@@ -11,29 +11,38 @@ from digital_land.package.sqlite import SqlitePackage
 
 tables = {
     "organisation": "var/cache",
+
+    "source": "collection",
+    "endpoint": "collection",
+    "resource": "collection",
+    "old-resource": "collection",
+    "log": "collection",
+
     "collection": "specification",
-    "typology": "specification",
-    "dataset": "specification",
-    "dataset-schema": "specification",
-    "datatype": "specification",
     "theme": "specification",
+    "typology": "specification",
+
+    "dataset": "specification",
     "field": "specification",
+    "datatype": "specification",
+
+    # TBD: replace these three tables ..
+    "dataset-schema": "specification",
     "schema": "specification",
     "schema-field": "specification",
-    "column": "dataset",
-    "concat": "dataset",
-    "convert": "dataset",
-    "default": "dataset",
-    "endpoint": "dataset",
-    "patch": "dataset",
-    "old-resource": "dataset",
-    "resource": "dataset",
-    "skip": "dataset",
-    "source": "dataset",
-    "transform": "dataset",
-    "log": "dataset",
-    "filter": "dataset",
-    "lookup": "dataset",
+    # with this one table ..
+    #"dataset-field": "specification",
+
+    "column": "pipeline",
+    "concat": "pipeline",
+    "convert": "pipeline",
+    "default": "pipeline",
+    "default-value": "pipeline",
+    "patch": "pipeline",
+    "skip": "pipeline",
+    "transform": "pipeline",
+    "filter": "pipeline",
+    "lookup": "pipeline",
 }
 
 indexes = {
