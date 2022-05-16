@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# create a database for exploring collection and pipeline logs
+# create a database for exploring collection, specification, configuration and logs
 
 import os
 import sys
@@ -21,17 +21,10 @@ tables = {
     "collection": "specification",
     "theme": "specification",
     "typology": "specification",
-
     "dataset": "specification",
+    "dataset-field": "specification",
     "field": "specification",
     "datatype": "specification",
-
-    # TBD: replace these three tables ..
-    "dataset-schema": "specification",
-    "schema": "specification",
-    "schema-field": "specification",
-    # with this one table ..
-    #"dataset-field": "specification",
 
     "column": "pipeline",
     "concat": "pipeline",
