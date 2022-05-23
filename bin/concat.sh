@@ -12,7 +12,7 @@ do
 done
 
 mkdir -p pipeline/
-for table in column concat convert default default-value patch skip transform filter lookup
+for table in column combine concat convert default default-value patch skip transform filter lookup
 do
     file=$table.csv
     set -x

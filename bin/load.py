@@ -27,6 +27,7 @@ tables = {
     "datatype": "specification",
 
     "column": "pipeline",
+    "combine": "pipeline",
     "concat": "pipeline",
     "convert": "pipeline",
     "default": "pipeline",
