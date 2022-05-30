@@ -25,6 +25,9 @@ tables = {
     "dataset-field": "specification",
     "field": "specification",
     "datatype": "specification",
+    "prefix": "specification",
+    "severity": "specification",
+    "issue-type": "specification",
 
     "column": "pipeline",
     "combine": "pipeline",

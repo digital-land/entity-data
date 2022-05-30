@@ -34,3 +34,7 @@ aws-build::
 
 push::
 	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
+
+specification::
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/issue-type.csv' > specification/issue-type.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/severity.csv' > specification/severity.csv
