@@ -44,8 +44,10 @@ tables = {
 
 indexes = {
     "source": ["endpoint"],
-    "log": ["endpoint"],
-    "resource_endpoint": ["endpoint", "resource"],
+    "log": ["endpoint", "resource"],
+    "resource_dataset": ["resource", "dataset"],
+    "resource_endpoint": ["resource", "endpoint"],
+    "resource_organisation": ["resource", "organisation"],
 }
 
 
