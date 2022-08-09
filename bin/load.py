@@ -28,6 +28,8 @@ tables = {
     "prefix": "specification",
     "severity": "specification",
     "issue-type": "specification",
+    "attribution": "specification",
+    "licence": "specification",
 
     "column": "pipeline",
     "combine": "pipeline",
