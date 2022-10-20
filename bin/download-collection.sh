@@ -14,7 +14,7 @@ do
         if [ ! -f $path ] ; then
             mkdir -p $dir
             set -x
-            curl -qsfL $flags -o $path "$s3$collection-collection/collection/$file"
+            curl -qsfL $flags --retry 3 -o $path "$s3$collection-collection/collection/$file"
             set +x
         fi
     done
