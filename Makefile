@@ -36,5 +36,10 @@ push::
 	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
 
 specification::
+	# additional
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/issue-type.csv' > specification/issue-type.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/severity.csv' > specification/severity.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project.csv' > specification/project.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification.csv' > specification/specification.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification-status.csv' > specification/specification-status.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/organisation-dataset.csv' > specification/organisation-dataset.csv

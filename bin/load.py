@@ -11,6 +11,7 @@ from digital_land.package.sqlite import SqlitePackage
 
 tables = {
     "organisation": "var/cache",
+    "organisation-dataset": "specification",
 
     "source": "collection",
     "endpoint": "collection",
@@ -30,6 +31,10 @@ tables = {
     "issue-type": "specification",
     "attribution": "specification",
     "licence": "specification",
+    "project": "specification",
+    "project-status": "specification",
+    "specification": "specification",
+    "specification-status": "specification",
 
     "column": "pipeline",
     "combine": "pipeline",
@@ -50,6 +55,8 @@ indexes = {
     "resource_dataset": ["resource", "dataset"],
     "resource_endpoint": ["resource", "endpoint"],
     "resource_organisation": ["resource", "organisation"],
+    "specification_dataset": ["specification", "dataset"],
+    "organisation_dataset": ["organisation", "dataset"],
 }
 
 
