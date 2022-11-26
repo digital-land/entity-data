@@ -43,3 +43,4 @@ specification::
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification.csv' > specification/specification.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification-status.csv' > specification/specification-status.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/organisation-dataset.csv' > specification/organisation-dataset.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project-status.csv' > specification/project-status.csv
