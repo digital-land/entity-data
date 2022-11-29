@@ -33,6 +33,7 @@ tables = {
     "licence": "specification",
     "project": "specification",
     "project-status": "specification",
+    "provision-reason": "specification",
     "specification": "specification",
     "specification-status": "specification",
 
