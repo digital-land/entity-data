@@ -1,3 +1,9 @@
+all::
+
+# prevent attempt to download centralised config
+PIPELINE_CONFIG_FILES=.dummy
+init::; touch .dummy
+
 include makerules/makerules.mk
 include makerules/pipeline.mk
 include makerules/datapackage.mk
