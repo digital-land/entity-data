@@ -71,18 +71,15 @@ if __name__ == "__main__":
     
     conn = sqlite3.connect(path)
     conn.execute("""
-    CREATE VIEW endpoint_most_recent_log_date as
-    SELECT endpoint,max(date(entry_date)) as most_recent_log_date
-    FROM log 
-    GROUP BY endpoint
-    """)
-
-    conn.execute("""
-    CREATE VIEW most_recent_logs as
+    CREATE TABLE most_recent_log AS
     select t1.*
-    from log t1 
-    inner join endpoint_most_recent_log_date t2 on t1.endpoint = t2.endpoint
-    where date(t1.entry_date) = t2.most_recent_log_date
+        from log t1 
+        inner join (
+            SELECT endpoint,max(date(entry_date)) as most_recent_log_date
+            FROM log 
+            GROUP BY endpoint
+            ) t2 on t1.endpoint = t2.endpoint
+        where date(t1.entry_date) = t2.most_recent_log_date
     """)
 
     conn.close()
