@@ -32,6 +32,7 @@ tables = {
     "attribution": "specification",
     "licence": "specification",
     "cohort": "specification",
+    "include-exclude": "specification",
     "role": "specification",
     "role-organisation": "specification",
     "role-organisation-rule": "specification",

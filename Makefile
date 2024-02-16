@@ -48,6 +48,7 @@ specification::
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/cohort.csv' > specification/cohort.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project.csv' > specification/project.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project-organisation.csv' > specification/project-organisation.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/include-exclude.csv' > specification/include-exclude.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role.csv' > specification/role.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role-organisation.csv' > specification/role-organisation.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role-organisation-rule.csv' > specification/role-organisation-rule.csv
