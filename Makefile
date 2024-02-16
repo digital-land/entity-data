@@ -45,9 +45,15 @@ specification::
 	# additional
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/issue-type.csv' > specification/issue-type.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/severity.csv' > specification/severity.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/cohort.csv' > specification/cohort.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project.csv' > specification/project.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project-organisation.csv' > specification/project-organisation.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role.csv' > specification/role.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role-organisation.csv' > specification/role-organisation.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/role-organisation-rule.csv' > specification/role-organisation-rule.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification.csv' > specification/specification.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/specification-status.csv' > specification/specification-status.csv
-	curl -qfsL '$(SOURCE_URL)/specification/main/specification/organisation-dataset.csv' > specification/organisation-dataset.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/project-status.csv' > specification/project-status.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision.csv' > specification/provision.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-rule.csv' > specification/provision-rule.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-reason.csv' > specification/provision-reason.csv

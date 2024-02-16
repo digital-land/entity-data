@@ -12,7 +12,6 @@ from digital_land.package.sqlite import SqlitePackage
 
 tables = {
     "organisation": "var/cache",
-    "organisation-dataset": "specification",
 
     "source": "collection",
     "endpoint": "collection",
@@ -32,8 +31,15 @@ tables = {
     "issue-type": "specification",
     "attribution": "specification",
     "licence": "specification",
+    "cohort": "specification",
+    "role": "specification",
+    "role-organisation": "specification",
+    "role-organisation-rule": "specification",
     "project": "specification",
+    "project-organisation": "specification",
     "project-status": "specification",
+    "provision": "specification",
+    "provision-rule": "specification",
     "provision-reason": "specification",
     "specification": "specification",
     "specification-status": "specification",
@@ -58,7 +64,7 @@ indexes = {
     "resource_endpoint": ["resource", "endpoint"],
     "resource_organisation": ["resource", "organisation"],
     "specification_dataset": ["specification", "dataset"],
-    "organisation_dataset": ["organisation", "dataset"],
+    "provision": ["organisation", "dataset", "project", "cohort", "provision_reason"],
 }
 
 
@@ -68,7 +74,7 @@ if __name__ == "__main__":
     path = sys.argv[1] if len(sys.argv) > 1 else "dataset/digital-land.sqlite3"
     package = SqlitePackage("digital-land", path=path, tables=tables, indexes=indexes)
     package.create()
-    
+
     conn = sqlite3.connect(path)
     conn.execute("""
     CREATE TABLE most_recent_log AS
