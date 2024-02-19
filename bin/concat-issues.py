@@ -4,10 +4,14 @@ import sys
 import csv
 import glob
 import re
+import os
 
-fields = ["resource", "pipeline", "row-number", "field", "issue-type", "value"]
+fields = ["resource", "pipeline", "row-number", "field", "issue-type", "value", "message", "dataset", "entry-number", "line-number"]
 
-w = csv.DictWriter(open("dataset/issue.csv", "w"), fields)
+issues_dir = "issues/"
+os.makedirs(issues_dir, exist_ok=True)
+
+w = csv.DictWriter(open(issues_dir + "issue.csv", "w"), fields)
 w.writeheader()
 
 for path in glob.glob("var/issue/*/*.csv"):

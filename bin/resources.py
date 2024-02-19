@@ -8,14 +8,14 @@ resources = {}
 pipelines = {}
 
 # TBD: replace with a single SQL query on a collection database ..
-for row in csv.DictReader(open("dataset/endpoint.csv", newline="")):
+for row in csv.DictReader(open("collection/endpoint.csv", newline="")):
     endpoint = row["endpoint"]
     endpoints[endpoint] = row
     endpoints[endpoint].setdefault("pipelines", {})
     endpoints[endpoint].setdefault("collection", "")
 
 # load sources
-for row in csv.DictReader(open("dataset/source.csv", newline="")):
+for row in csv.DictReader(open("collection/source.csv", newline="")):
     endpoint = row["endpoint"]
 
     if endpoint:
@@ -28,7 +28,7 @@ for row in csv.DictReader(open("dataset/source.csv", newline="")):
                 endpoints[endpoint]["collection"] = row["collection"]
 
 # load resources
-for row in csv.DictReader(open("dataset/resource.csv", newline="")):
+for row in csv.DictReader(open("collection/resource.csv", newline="")):
     resource = row["resource"]
     resources[resource] = row
     resources[resource].setdefault("pipelines", {})

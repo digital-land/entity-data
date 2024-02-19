@@ -23,6 +23,7 @@ specification/
 collection/
 pipeline/
 dataset/
+issues/
 
 # ignore databases
 *.db
