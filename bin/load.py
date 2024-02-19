@@ -56,10 +56,14 @@ tables = {
     "transform": "pipeline",
     "filter": "pipeline",
     "lookup": "pipeline",
+
+    "issue": "issues",
 }
 
 indexes = {
     "source": ["endpoint"],
+    "issue": ["resource", "field", "issue-type"],
+    "issue-type": ["severity"],
     "log": ["endpoint", "resource"],
     "resource_dataset": ["resource", "dataset"],
     "resource_endpoint": ["resource", "endpoint"],
