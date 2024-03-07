@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     conn = sqlite3.connect(path)
     conn.execute("""
-    CREATE TABLE most_recent_log AS
+    CREATE TABLE reporting_most_recent_log AS
     select t1.*
         from log t1 
         inner join (
@@ -93,4 +93,83 @@ if __name__ == "__main__":
         where date(t1.entry_date) = t2.most_recent_log_date
     """)
 
+    conn.execute("""
+    CREATE TABLE reporting_historic_endpoints AS
+    SELECT
+        s.organisation,
+        o.name,
+        s.collection,
+        sp.pipeline,
+        l.endpoint,
+        e.endpoint_url,
+        l.status,
+        l.exception,
+        l.resource,
+
+        max(l.entry_date) as latest_log_entry_date,
+        e.entry_date as endpoint_entry_date,
+        e.end_date as endpoint_end_date,
+        r.start_date as resource_start_date,
+        r.end_date as resource_end_date
+
+    FROM
+        log l
+        INNER JOIN source s on l.endpoint = s.endpoint
+        INNER JOIN endpoint e on l.endpoint = e.endpoint
+        INNER JOIN organisation o on o.organisation = replace(s.organisation, '-eng', '')
+        INNER JOIN source_pipeline sp on s.source = sp.source
+        LEFT JOIN resource r on l.resource = r.resource
+
+    WHERE
+        s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
+        
+    GROUP BY
+        1, 2, 3, 4, 5, 6, 7, 8, 9
+
+    ORDER BY
+        s.organisation, o.name, s.collection, sp.pipeline, latest_log_entry_date DESC
+    """)
+
+    conn.execute("""
+    CREATE TABLE reporting_latest_endpoints AS
+        SELECT * 
+            from (
+            SELECT
+                s.organisation,
+                o.name,
+                s.collection,
+                sp.pipeline,
+                l.endpoint,
+                e.endpoint_url,
+                l.status,
+                l.exception,
+                l.resource,
+
+                max(l.entry_date) as latest_log_entry_date,
+                e.entry_date as endpoint_entry_date,
+                e.end_date as endpoint_end_date,
+                r.start_date as resource_start_date,
+                r.end_date as resource_end_date,
+            
+                row_number() over (partition by s.organisation,sp.pipeline order by e.entry_date, l.entry_date desc) as rn
+
+            FROM
+                log l
+                INNER JOIN source s on l.endpoint = s.endpoint
+                INNER JOIN endpoint e on l.endpoint = e.endpoint
+                INNER JOIN organisation o on o.organisation = replace(s.organisation, '-eng', '')
+                INNER JOIN source_pipeline sp on s.source = sp.source
+                LEFT JOIN resource r on l.resource = r.resource
+
+            WHERE
+                s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
+                
+            GROUP BY
+                1, 2, 3, 4, 5, 6, 7, 8, 9
+
+            ORDER BY
+                s.organisation, o.name, s.collection, sp.pipeline, endpoint_entry_date DESC
+            ) t1
+        where t1.rn = 1              
+    """)
     conn.close()
