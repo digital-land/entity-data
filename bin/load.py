@@ -140,7 +140,7 @@ if __name__ == "__main__":
                 s.collection,
                 sp.pipeline,
                 l.endpoint,
-            --    e.endpoint_url,
+                e.endpoint_url,
                 l.status,
                 l.exception,
                 l.resource,
@@ -165,7 +165,7 @@ if __name__ == "__main__":
                 s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
                 
             GROUP BY
-                1, 2, 3, 4, 5, 6, 7, 8
+                1, 2, 3, 4, 5, 6, 7, 8, 9
 
             ORDER BY
                 s.organisation, o.name, s.collection, sp.pipeline, endpoint_entry_date DESC
