@@ -151,7 +151,7 @@ if __name__ == "__main__":
                 r.start_date as resource_start_date,
                 r.end_date as resource_end_date,
             
-                row_number() over (partition by s.organisation,sp.pipeline order by e.entry_date, l.entry_date desc desc) as rn
+                row_number() over (partition by s.organisation,sp.pipeline order by e.entry_date, l.entry_date desc) as rn
 
             FROM
                 log l
