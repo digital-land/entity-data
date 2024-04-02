@@ -17,6 +17,7 @@ first-pass::
 	bin/download-pipeline.sh
 	bin/concat.sh
 	bin/download-issues.sh
+	bin/download-expectations.sh
 	#bin/download-resources.sh
 	python3 bin/concat-issues.py
 	csvstack var/expectations/**/*-responses.csv > expectation/expecation-response.csv
