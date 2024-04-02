@@ -19,6 +19,9 @@ first-pass::
 	bin/download-issues.sh
 	#bin/download-resources.sh
 	python3 bin/concat-issues.py
+	csvstack var/expectations/**/*-responses.csv > expectation/expecation-response.csv
+	csvstack var/expectations/**/*-issues.csv > expectation/expecation-issue.csv
+
 
 second-pass::	$(DB)
 
@@ -58,3 +61,5 @@ specification::
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision.csv' > specification/provision.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-rule.csv' > specification/provision-rule.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-reason.csv' > specification/provision-reason.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/expecation-response.csv' > specification/expecation-response.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/expecation-issue.csv' > specification/expecation-issue.csv

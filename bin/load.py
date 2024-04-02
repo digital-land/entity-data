@@ -58,6 +58,9 @@ tables = {
     "lookup": "pipeline",
 
     "issue": "issues",
+
+    "expectation-response": "expectation",
+    "expectation-issue": "expectation",
 }
 
 indexes = {
