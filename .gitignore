@@ -25,6 +25,7 @@ collection/
 pipeline/
 dataset/
 issues/
+expectations/
 
 # ignore databases
 *.db
