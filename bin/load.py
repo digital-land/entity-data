@@ -59,8 +59,8 @@ tables = {
 
     "issue": "issues",
 
-    "expectation-response": "expectation",
-    "expectation-issue": "expectation",
+    "expectation-response": "expectations",
+    "expectation-issue": "expectations",
 }
 
 indexes = {
@@ -73,6 +73,7 @@ indexes = {
     "resource_organisation": ["resource", "organisation"],
     "specification_dataset": ["specification", "dataset"],
     "provision": ["organisation", "dataset", "project", "cohort", "provision_reason"],
+    "expectation-issue": ["response_id"],
 }
 
 

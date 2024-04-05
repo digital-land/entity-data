@@ -5,22 +5,27 @@ set -e
 s3="https://files.planning.data.gov.uk/"
 expectations_dir="expectations/"
 
-csvcut -c collection specification/collection.csv | tail -n +2 |
-while read collection
+dir=var/$expectations_dir
+mkdir -p $dir
+
+csvcut -c dataset,collection specification/dataset.csv | tr ',' ' ' | tail -n +2 |
+while read dataset collection
 do
-    for checkpoint in dataset
-    do
-        for file in dataset/$collection-responses.csv dataset/$collection-issues.csv
+    if [ -n "$collection" ] ; then
+        echo $dataset $collection
+
+        for file in $dataset-expectation-response.csv $dataset-expectation-issue.csv
         do
-            dir=var/$expectations_dir
-            path=var/$expectations_dir$file
+            path=$dir$file
             if [ ! -f $path ] ; then
-                mkdir -p $dir/dataset
                 set -x
-                curl -qsfL $flags --retry 3 -o $path $s3$expectations_dir$file
+                curl -qsfL $flags --retry 3 -o $path $s3$collection-collection/dataset/$file || echo "*** UNABLE TO DOWNLOAD $path ***"
                 set +x
             fi
         done
-    done
+    fi
 done
 
+mkdir -p expectations
+csvstack $dir/*-response.csv > expectations/expectation-response.csv
+csvstack $dir/*-issue.csv > expectations/expectation-issue.csv
