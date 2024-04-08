@@ -17,8 +17,10 @@ first-pass::
 	bin/download-pipeline.sh
 	bin/concat.sh
 	bin/download-issues.sh
+	#bin/download-expectations.sh
 	#bin/download-resources.sh
 	python3 bin/concat-issues.py
+
 
 second-pass::	$(DB)
 
