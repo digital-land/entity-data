@@ -27,5 +27,5 @@ do
 done
 
 mkdir -p expectations
-csvstack $dir/*-response.csv > expectations/expectation-response.csv
+csvstack $dir/*-response.csv > expectations/expectation-result.csv
 csvstack $dir/*-issue.csv > expectations/expectation-issue.csv

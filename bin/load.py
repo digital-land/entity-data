@@ -59,7 +59,7 @@ tables = {
 
     "issue": "issues",
 
-    "expectation-response": "expectations",
+    "expectation-result": "expectations",
     "expectation-issue": "expectations",
 }
 
