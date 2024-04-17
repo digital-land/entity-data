@@ -14,7 +14,7 @@ do
     if [ -n "$collection" ] ; then
         echo $dataset $collection
 
-        for file in $dataset-expectation-response.csv $dataset-expectation-issue.csv
+        for file in $dataset-expectation-result.csv $dataset-expectation-issue.csv
         do
             path=$dir$file
             if [ ! -f $path ] ; then
@@ -27,5 +27,5 @@ do
 done
 
 mkdir -p expectations
-csvstack $dir/*-response.csv > expectations/expectation-result.csv
+csvstack $dir/*-result.csv > expectations/expectation-result.csv
 csvstack $dir/*-issue.csv > expectations/expectation-issue.csv
