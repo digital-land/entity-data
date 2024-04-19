@@ -146,6 +146,7 @@ if __name__ == "__main__":
                 l.endpoint,
                 e.endpoint_url,
                 l.status,
+                t2.days_since_200,
                 l.exception,
                 l.resource,
 
@@ -164,10 +165,21 @@ if __name__ == "__main__":
                 INNER JOIN organisation o on o.organisation = replace(s.organisation, '-eng', '')
                 INNER JOIN source_pipeline sp on s.source = sp.source
                 LEFT JOIN resource r on l.resource = r.resource
+                LEFT JOIN (
+                    SELECT
+                        endpoint,
+                        cast(julianday('now') - julianday(max(entry_date)) as int) as days_since_200
+                    FROM
+                        log
+                    WHERE
+                        status=200
+                    GROUP BY
+                        endpoint
+                ) t2 on e.endpoint = t2.endpoint
 
             WHERE
                 s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
-                
+                and e.end_date=''
             GROUP BY
                 1, 2, 3, 4, 5, 6, 7, 8, 9
 
