@@ -59,6 +59,8 @@ tables = {
 
     "issue": "issues",
 
+    "column-field": "column-field",
+
     "expectation-result": "expectations",
     "expectation-issue": "expectations",
 }
