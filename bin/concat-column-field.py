@@ -19,9 +19,7 @@ for path in glob.glob("var/column-field/*/*.csv"):
     m = re.search(r"/([a-zA-Z0-9_-]+)/([a-f0-9]+).csv$", path)
     pipeline = m.group(1)
     resource = m.group(2)
-    print(pipeline, resource)
     for row in csv.DictReader(open(path, newline="")):
         row["resource"] = resource
         row["dataset"] = pipeline
-        print(row)
         w.writerow(row)
