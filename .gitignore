@@ -26,6 +26,7 @@ pipeline/
 dataset/
 issues/
 expectations/
+column-field/
 
 # ignore databases
 *.db
