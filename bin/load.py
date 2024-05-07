@@ -126,9 +126,6 @@ if __name__ == "__main__":
         INNER JOIN source_pipeline sp on s.source = sp.source
         LEFT JOIN resource r on l.resource = r.resource
 
-    WHERE
-        s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
-        
     GROUP BY
         1, 2, 3, 4, 5, 6, 7, 8, 9
 
@@ -180,8 +177,7 @@ if __name__ == "__main__":
                 ) t2 on e.endpoint = t2.endpoint
 
             WHERE
-                s.collection IN ("article-4-direction", "conservation-area", "listed-building", "tree-preservation-order")
-                and e.end_date=''
+                e.end_date=''
             GROUP BY
                 1, 2, 3, 4, 5, 6, 7, 8, 9
 
