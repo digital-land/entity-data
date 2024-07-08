@@ -12,7 +12,7 @@ do
         if [ ! -f $path ] ; then
             mkdir -p $dir
             set -x
-            wget -q -O $path "$github$collection-collection/main/pipeline/$file"
+            wget -q -O $path "$github/config/main/pipeline/$collection/$file"
             set +x
         fi
     done
