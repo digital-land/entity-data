@@ -10,6 +10,7 @@ include makerules/datapackage.mk
 include makerules/development.mk
 
 DB=dataset/digital-land.sqlite3
+DB_PERF = dataset/performance.sqlite3
 
 first-pass::
 	mkdir -p dataset/
@@ -24,11 +25,15 @@ first-pass::
 	python3 bin/concat-column-field.py
 
 
-second-pass::	$(DB)
+second-pass::	$(DB) $(DB_PERF)
 
 $(DB):	bin/load.py
 	@rm -f $@
 	python3 bin/load.py $@
+
+$(DB_PERF): bin/load_performance.py
+	@rm -f $@  # Remove existing database file
+	python3 bin/load_performance.py $@  # Create new database
 
 clean::
 	rm -rf ./var
