@@ -1,6 +1,12 @@
-name: Build the digital-land database test
+name: Build the digital-land/Performance database
 on:
-  workflow_dispatch: null
+  push:
+    branches: [add_performance_db]
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: The environment to deploy to.
 env:
   DLB_BOT_EMAIL: ${{ secrets.DLB_BOT_EMAIL }}
   DLB_BOT_TOKEN: ${{ secrets.DLB_BOT_TOKEN }}
