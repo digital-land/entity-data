@@ -51,7 +51,7 @@ jobs:
       run: make clobber
 
     - name: Build dataset
-      run: make
+      run: make third-pass
 
     # Development
     - name: Configure Development AWS Credentials
