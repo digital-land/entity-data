@@ -1,4 +1,6 @@
 name: Build the digital-land database test
+on:
+  workflow_dispatch: null
 env:
   DLB_BOT_EMAIL: ${{ secrets.DLB_BOT_EMAIL }}
   DLB_BOT_TOKEN: ${{ secrets.DLB_BOT_TOKEN }}
