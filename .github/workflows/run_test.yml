@@ -48,7 +48,7 @@ jobs:
       run: make init
 
     - name: Clobber dataset
-      run: make clobber
+      run: make clobber-performance
 
     - name: Build dataset
       run: make third-pass
