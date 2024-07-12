@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# create a database for exploring collection, specification, configuration and logs
+# create a database for Performace related metrics
 
 import os
 import sys
