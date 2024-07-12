@@ -35,7 +35,7 @@ $(DB):	bin/load.py
 
 $(DB_PERF): bin/load_performance.py
 	@rm -f $@  
-	python3 bin/load_performance.py $@ 
+	python3 bin/load_performance.py $@ $(DB)
 
 clean::
 	rm -rf ./var
