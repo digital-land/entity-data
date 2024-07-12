@@ -43,7 +43,6 @@ endif
 	init\
 	first-pass\
 	second-pass\
-	third-pass\
 	clobber\
 	clean\
 	commit-makerules\
@@ -77,16 +76,13 @@ SPATIALITE_EXTENSION="/usr/local/lib/mod_spatialite.dylib"
 endif
 endif
 
-all:: first-pass second-pass third-pass
+all:: first-pass second-pass
 
 first-pass::
 	@:
 
 # restart the make process to pick-up collected files
 second-pass::
-	@:
-
-third-pass::
 	@:
 
 # initialise
