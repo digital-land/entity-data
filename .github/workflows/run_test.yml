@@ -1,5 +1,7 @@
 name: Build the digital-land/Performance database
 on:
+  push:
+    branches: [add_performance_db]
   workflow_dispatch:
     inputs:
       environment:
