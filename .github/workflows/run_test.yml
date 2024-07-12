@@ -48,10 +48,10 @@ jobs:
       run: make init
 
     - name: Clobber dataset
-      run: make clobber-performance
+      run: make clobber
 
     - name: Build dataset
-      run: make third-pass
+      run: make
 
     # Development
     - name: Configure Development AWS Credentials
