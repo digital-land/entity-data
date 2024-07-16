@@ -19,22 +19,47 @@ def fetch_data_from_digital_land(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT
+            SELECT
             p.organisation,
             o.name,
             p.dataset,
-            rle.endpoint
+            rle.endpoint,
+            rle.resource,
+            rle.exception,
+            rle.status as http_status,
+            COUNT(
+            CASE
+                WHEN it.severity = 'error' THEN 1
+                ELSE NULL
+            END
+        ) as count_error,
+            COUNT(
+            CASE
+                WHEN it.severity = 'warning' THEN 1
+                ELSE NULL
+            END
+        ) as count_warning
+
         FROM
             provision p
-        INNER JOIN
+        LEFT JOIN
             organisation o ON o.organisation = p.organisation
         LEFT JOIN
-            reporting_latest_endpoints rle 
+            reporting_latest_endpoints rle
             ON REPLACE(rle.organisation, '-eng', '') = p.organisation
             AND rle.pipeline = p.dataset
+        LEFT JOIN
+            issue i ON rle.resource = i.resource AND rle.pipeline = i.dataset
+        LEFT JOIN
+            issue_type it ON i.issue_type = it.issue_type AND it.severity != 'info'
+        GROUP BY
+            p.organisation,
+            p.dataset,
+            o.name,
+            rle.endpoint
         ORDER BY
             p.organisation,
-            o.name
+            o.name;
     """)
     data = cursor.fetchall()
     conn.close()
@@ -49,13 +74,18 @@ def create_organisation_dataset_summary(data, performance_db_path):
             organisation TEXT,
             name TEXT,
             dataset TEXT,
-            endpoint TEXT
+            endpoint TEXT,
+            resource TEXT,
+            exception TEXT,
+            http_status TEXT,
+            count_error INT,
+            count_warning INT
         )
     """)
     
     cursor.executemany("""
-        INSERT INTO organisation_dataset_summary (organisation, name, dataset, endpoint)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO organisation_dataset_summary (organisation, name, dataset, endpoint, resource, exception, http_status, count_error, count_warning)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, data)
     
     conn.commit()
