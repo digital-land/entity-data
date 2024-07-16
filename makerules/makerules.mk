@@ -117,7 +117,7 @@ prune::
 
 # update makerules from source
 makerules::
-	curl -qfsL '$(SOURCE_URL)/makerules/main/makerules.mk' > makerules/makerules.mk
+	curl -qfsL '$(SOURCE_URL)/makerules/add_performance_db/makerules.mk' > makerules/makerules.mk
 
 ifeq (,$(wildcard ./makerules/specification.mk))
 # update local copies of specification files
