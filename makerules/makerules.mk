@@ -43,6 +43,7 @@ endif
 	init\
 	first-pass\
 	second-pass\
+	third-pass\
 	clobber\
 	clean\
 	commit-makerules\
@@ -76,13 +77,16 @@ SPATIALITE_EXTENSION="/usr/local/lib/mod_spatialite.dylib"
 endif
 endif
 
-all:: first-pass second-pass
+all:: first-pass second-pass third-pass
 
 first-pass::
 	@:
 
 # restart the make process to pick-up collected files
 second-pass::
+	@:
+
+third-pass::
 	@:
 
 # initialise
@@ -113,7 +117,7 @@ prune::
 
 # update makerules from source
 makerules::
-	curl -qfsL '$(SOURCE_URL)/makerules/add_performance_db/makerules.mk' > makerules/makerules.mk
+	curl -qfsL '$(SOURCE_URL)/makerules/main/makerules.mk' > makerules/makerules.mk
 
 ifeq (,$(wildcard ./makerules/specification.mk))
 # update local copies of specification files
