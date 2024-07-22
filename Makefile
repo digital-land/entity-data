@@ -34,6 +34,7 @@ $(DB):	bin/load.py
 	python3 bin/load.py $@
 
 $(DB_PERF): bin/load_performance.py
+	bin/download-digital-land.sh
 	@rm -f $@  
 	python3 bin/load_performance.py $@ $(DB)
 
