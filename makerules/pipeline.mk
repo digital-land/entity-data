@@ -144,7 +144,7 @@ clean::
 init::	$(CACHE_DIR)organisation.csv
 
 makerules::
-	curl -qfsL '$(SOURCE_URL)/makerules/main/pipeline.mk' > makerules/pipeline.mk
+	curl -qfsL '$(SOURCE_URL)/makerules/add_performance_db/pipeline.mk' > makerules/pipeline.mk
 
 save-transformed::
 	aws s3 sync $(TRANSFORMED_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(REPOSITORY)/$(TRANSFORMED_DIR) --no-progress
