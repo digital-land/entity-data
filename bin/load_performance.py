@@ -11,7 +11,7 @@ from digital_land.package.sqlite import SqlitePackage
 
 
 indexes = {
-    "organisation_dataset_summary": ["organisation"]
+    "provision_summary": ["organisation","name","dataset"]
 }
 
 
