@@ -120,4 +120,4 @@ if __name__ == "__main__":
     # Create new table and insert data in performance database
     create_organisation_dataset_summary(data, performance_db_path)
 
-    logging.info("New table 'provision_summary' created successfully in performance database.")
+    logging.info("New table 'provision_summary' created successfully in performance database")
