@@ -10,6 +10,7 @@ include makerules/datapackage.mk
 include makerules/development.mk
 
 DB=dataset/digital-land.sqlite3
+DB_PERF = dataset/performance.sqlite3
 
 first-pass::
 	mkdir -p dataset/
@@ -24,11 +25,18 @@ first-pass::
 	python3 bin/concat-column-field.py
 
 
-second-pass::	$(DB)
+second-pass:: $(DB) 
+
+third-pass:: $(DB_PERF)
 
 $(DB):	bin/load.py
 	@rm -f $@
 	python3 bin/load.py $@
+
+$(DB_PERF): bin/load_performance.py
+	bin/download-digital-land.sh
+	@rm -f $@  
+	python3 bin/load_performance.py $@ $(DB)
 
 clean::
 	rm -rf ./var
@@ -38,12 +46,17 @@ clobber::
 	rm -rf var/pipeline
 	rm -rf dataset/
 	rm -rf $(DB)
+	rm -rf $(DB_PERF)
+
+clobber-performance::
+	rm -rf $(DB_PERF)
 
 aws-build::
 	aws batch submit-job --job-name digital-land-db-$(shell date '+%Y-%m-%d-%H-%M-%S') --job-queue dl-batch-queue --job-definition dl-batch-def --container-overrides '{"environment": [{"name":"BATCH_FILE_URL","value":"https://raw.githubusercontent.com/digital-land/docker-builds/main/builder_run.sh"}, {"name" : "REPOSITORY","value" : "digital-land-builder"}]}'
 
 push::
 	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
+	aws s3 cp $(DB_PERF) s3://digital-land-collection/performance.sqlite3
 
 specification::
 	# additional
