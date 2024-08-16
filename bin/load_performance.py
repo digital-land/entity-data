@@ -49,6 +49,7 @@ def fetch_data_from_digital_land(db_path):
             WHEN rle.endpoint_end_date IS "" AND rle.status != 200 THEN rle.endpoint
             ELSE NULL
         END) AS error_endpoint_count,
+        COUNT( 
         CASE
             WHEN it.severity = 'error' AND rle.endpoint_end_date IS "" AND it.responsibility = 'internal' THEN 1
             ELSE NULL
