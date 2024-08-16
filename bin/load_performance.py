@@ -79,7 +79,8 @@ def fetch_data_from_digital_land(db_path):
             ELSE NULL
         END
         ) AS count_internal_notice,
-                CASE
+        COUNT(
+        CASE
             WHEN it.severity = 'notice' AND rle.endpoint_end_date IS "" AND it.responsibility = 'external' THEN 1
             ELSE NULL
         END
