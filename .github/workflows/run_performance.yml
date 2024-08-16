@@ -47,10 +47,10 @@ jobs:
     - name: Install dependencies
       run: make init
 
-    - name: Clobber performance dataset
+    - name: Clobber dataset
       run: make clobber-performance
 
-    - name: Build performance dataset
+    - name: Build dataset
       run: make third-pass
 
     # Development
