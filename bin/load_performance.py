@@ -120,9 +120,9 @@ def create_organisation_dataset_summary(data, performance_db_path):
             error_endpoint_count INT,
             count_internal_error INT,
             count_external_error INT,
-            count_internal_warning INT
-            count_external_warning INT
-            count_internal_notice INT
+            count_internal_warning INT,
+            count_external_warning INT,
+            count_internal_notice INT,
             count_external_notice INT
         )
     """)
