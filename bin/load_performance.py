@@ -122,19 +122,14 @@ def create_organisation_dataset_summary(data, performance_db_path):
             dataset TEXT,
             active_endpoint_count INT,
             error_endpoint_count INT,
-            count_internal_error INT,
-            count_external_error INT,
-            count_internal_warning INT,
-            count_external_warning INT,
-            count_internal_notice INT,
-            count_external_notice INT
+            count_error INT,
+            count_warning INT
         )
     """)
 
     cursor.executemany("""
-        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_internal_error,
-            count_external_error, count_internal_warning, count_external_warning, count_internal_notice, count_external_notice)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_error, count_warning)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, data)
 
     conn.commit()
