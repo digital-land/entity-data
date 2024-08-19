@@ -11,7 +11,7 @@ from digital_land.package.sqlite import SqlitePackage
 import pandas as pd
 
 indexes = {
-    "provision_summary": ["organisation","name","dataset"]
+    "provision_summary": ["organisation", "name", "dataset"]
 }
 
 
@@ -28,10 +28,11 @@ def fetch_data_from_digital_land(db_path):
     df_issue = pd.read_sql_query(query, conn)
     return df_issue
 
+
 def create_organisation_dataset_summary(data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
     cursor = conn.cursor()
-    
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS provision_summary (
             organisation TEXT,
@@ -39,16 +40,21 @@ def create_organisation_dataset_summary(data, performance_db_path):
             dataset TEXT,
             active_endpoint_count INT,
             error_endpoint_count INT,
-            count_error INT,
-            count_warning INT
+            count_internal_error INT,
+            count_external_error INT,
+            count_internal_warning INT,
+            count_external_warning INT,
+            count_internal_notice INT,
+            count_external_notice INT
         )
     """)
-    
+
     cursor.executemany("""
-        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_error, count_warning)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_internal_error,
+            count_external_error, count_internal_warning, count_external_warning, count_internal_notice, count_external_notice)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, data)
-    
+
     conn.commit()
     conn.close()
 
@@ -132,4 +138,5 @@ if __name__ == "__main__":
     # Create new table and insert data in performance database
     #create_organisation_dataset_summary(merged_data,  performance_db_path)
 
-    logging.info("New table 'provision_summary' created successfully in performance database")
+    logging.info(
+        "New table 'provision_summary' created successfully in performance database")
