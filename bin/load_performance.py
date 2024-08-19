@@ -49,18 +49,42 @@ def fetch_data_from_digital_land(db_path):
             WHEN rle.endpoint_end_date IS "" AND rle.status != 200 THEN rle.endpoint
             ELSE NULL
         END) AS error_endpoint_count,
+        COUNT( 
+        CASE
+            WHEN it.severity = 'error' AND rle.endpoint_end_date IS "" AND it.responsibility = 'internal' THEN 1
+            ELSE NULL
+        END
+        ) AS count_internal_error,
         COUNT(
-            CASE
-                WHEN it.severity = 'error' AND rle.endpoint_end_date IS "" THEN 1
-                ELSE NULL
-            END
-        ) AS count_error,
+        CASE
+            WHEN it.severity = 'error' AND rle.endpoint_end_date IS "" AND it.responsibility = 'external' THEN 1
+            ELSE NULL
+        END
+        ) AS count_external_error,
         COUNT(
-            CASE
-                WHEN it.severity = 'warning' AND rle.endpoint_end_date IS "" THEN 1
-                ELSE NULL
-            END
-        ) AS count_warning
+        CASE
+            WHEN it.severity = 'warning' AND rle.endpoint_end_date IS "" AND it.responsibility = 'internal' THEN 1
+            ELSE NULL
+        END
+        ) AS count_internal_warning,
+        COUNT(
+        CASE
+            WHEN it.severity = 'warning' AND rle.endpoint_end_date IS "" AND it.responsibility = 'external' THEN 1
+            ELSE NULL
+        END
+        ) AS count_external_warning,
+        COUNT(
+        CASE
+            WHEN it.severity = 'notice' AND rle.endpoint_end_date IS "" AND it.responsibility = 'internal' THEN 1
+            ELSE NULL
+        END
+        ) AS count_internal_notice,
+        COUNT(
+        CASE
+            WHEN it.severity = 'notice' AND rle.endpoint_end_date IS "" AND it.responsibility = 'external' THEN 1
+            ELSE NULL
+        END
+        ) AS count_external_notice
     FROM
         provision p
         LEFT JOIN organisation o ON o.organisation = p.organisation
@@ -94,14 +118,19 @@ def create_organisation_dataset_summary(data, performance_db_path):
             dataset TEXT,
             active_endpoint_count INT,
             error_endpoint_count INT,
-            count_error INT,
-            count_warning INT
+            count_internal_error INT,
+            count_external_error INT,
+            count_internal_warning INT,
+            count_external_warning INT,
+            count_internal_notice INT,
+            count_external_notice INT
         )
     """)
     
     cursor.executemany("""
-        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_error, count_warning)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_internal_error,
+            count_external_error, count_internal_warning, count_external_warning, count_internal_notice, count_external_notice)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, data)
     
     conn.commit()
