@@ -95,8 +95,8 @@ def create_performance_tables(merged_data, performance_db_path):
         'count_internal_notice': 'int',
         'count_external_notice': 'int'
     })
-    
-    provision_table_name = "provsion_summary"
+
+    provision_table_name = "provision_summary"
     final_result.to_sql(provision_table_name, conn, if_exists='replace', index=False)
     conn.close()
     
