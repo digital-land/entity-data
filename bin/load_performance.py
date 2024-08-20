@@ -37,11 +37,13 @@ def fetch_issue_data(db_path):
     return df_issue
 
 
-def create_organisation_dataset_summary(merged_data, performance_db_path):
+def create_performance_tables(merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
-    table_name = "issue_summary"  
-    merged_data.to_sql(table_name, conn, if_exists='replace', index=False)
-    final_result = merged_data.groupby(['organisation', 'name', 'pipeline']).agg(
+    issue_table_name = "issue_summary"  
+
+    issue_data_filtered = merged_data[merged_data['endpoint'].notna()]
+    issue_data_filtered.to_sql(issue_table_name, conn, if_exists='replace', index=False)
+    final_result = merged_data.groupby(['organisation', 'name', 'dataset']).agg(
         active_endpoint_count=pd.NamedAgg(
             column='endpoint', 
             aggfunc='nunique'
@@ -82,8 +84,8 @@ def create_organisation_dataset_summary(merged_data, performance_db_path):
         )
     ).reset_index()
 
-    table_name = "provsion_summary"
-    final_result.to_sql(table_name, conn, if_exists='replace', index=False)
+    provision_table_name = "provsion_summary"
+    final_result.to_sql(provision_table_name, conn, if_exists='replace', index=False)
     conn.close()
     
 
@@ -92,7 +94,6 @@ def fetch_reporting_data(db_path):
     query = """
         SELECT 
             rle.organisation,
-            rle.name,
             rle.collection,
             rle.pipeline,
             rle.endpoint,
@@ -126,11 +127,13 @@ if __name__ == "__main__":
     issue_data = fetch_issue_data(digital_land_db_path)
 
     reporting_data = fetch_reporting_data(performance_db_path)
-
-    merged_data = pd.merge(reporting_data, issue_data, left_on=["resource", "pipeline"], right_on=["resource", "dataset"], how="left")
+    reporting_data["organisation"] = reporting_data["organisation"].str.replace("-eng", "")
+    
+    provsion_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
+    merged_data = pd.merge(provsion_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
     
     # Create new table and insert data in performance database
-    create_organisation_dataset_summary(merged_data,  performance_db_path)
+    create_performance_tables(merged_data, performance_db_path)
 
     logging.info(
         "New table 'provision_summary' created successfully in performance database")
