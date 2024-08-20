@@ -92,6 +92,7 @@ def fetch_reporting_data(db_path):
     query = """
         SELECT 
             rle.organisation,
+            rle.name,
             rle.collection,
             rle.pipeline,
             rle.endpoint,
