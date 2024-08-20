@@ -83,7 +83,19 @@ def create_performance_tables(merged_data, performance_db_path):
                                 (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
         )
     ).reset_index()
-
+   
+       # Convert counts to integers
+    final_result = final_result.astype({
+        'active_endpoint_count': 'int',
+        'error_endpoint_count': 'int',
+        'count_internal_issue': 'int',
+        'count_external_issue': 'int',
+        'count_internal_warning': 'int',
+        'count_external_warning': 'int',
+        'count_internal_notice': 'int',
+        'count_external_notice': 'int'
+    })
+    
     provision_table_name = "provsion_summary"
     final_result.to_sql(provision_table_name, conn, if_exists='replace', index=False)
     conn.close()
@@ -132,8 +144,8 @@ if __name__ == "__main__":
     provsion_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
     merged_data = pd.merge(provsion_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
     
-    # Create new table and insert data in performance database
+    # Create new tables and insert data in performance database
     create_performance_tables(merged_data, performance_db_path)
 
     logging.info(
-        "New table 'provision_summary' created successfully in performance database")
+        "Tables in 'performance' DB created successfully.")
