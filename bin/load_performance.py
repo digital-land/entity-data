@@ -2,69 +2,96 @@
 
 # create a database for Performace related metrics
 
-import os
 import sys
-import csv
 import logging
 import sqlite3
-from digital_land.package.sqlite import SqlitePackage
 import pandas as pd
 
 indexes = {
     "provision_summary": ["organisation", "name", "dataset"]
 }
 
+def fetch_provision_data(db_path):
+    conn = sqlite3.connect(db_path)
+    query = """
+        select p.organisation, o.name, p.cohort, p.dataset from provision p
+        inner join organisation o on o.organisation = p.organisation
+        order by p.organisation
+    """
+    df_provsion = pd.read_sql_query(query, conn)
+    return df_provsion
 
-def fetch_data_from_digital_land(db_path):
+def fetch_issue_data(db_path):
     conn = sqlite3.connect(db_path)
     query = """
         select  
+        count(*) as count_issues, strftime('%d-%m-%Y', 'now') as date,
         i.issue_type as issue_type, it.severity, it.responsibility, i.dataset, i.resource
         from issue i
         inner join resource r on i.resource = r.resource
         inner join issue_type it on i.issue_type = it.issue_type
         where r.end_date = ''
+        group by i.resource,i.issue_type
     """
     df_issue = pd.read_sql_query(query, conn)
     return df_issue
 
 
-def create_organisation_dataset_summary(data, performance_db_path):
+def create_organisation_dataset_summary(merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS provision_summary (
-            organisation TEXT,
-            name TEXT,
-            dataset TEXT,
-            active_endpoint_count INT,
-            error_endpoint_count INT,
-            count_internal_error INT,
-            count_external_error INT,
-            count_internal_warning INT,
-            count_external_warning INT,
-            count_internal_notice INT,
-            count_external_notice INT
+    table_name = "issue_summary"  
+    merged_data.to_sql(table_name, conn, if_exists='replace', index=False)
+    final_result = merged_data.groupby(['organisation', 'name', 'pipeline']).agg(
+        active_endpoint_count=pd.NamedAgg(
+            column='endpoint', 
+            aggfunc='nunique'
+        ),
+         error_endpoint_count=pd.NamedAgg(
+            column='endpoint', 
+            aggfunc=lambda x: x[merged_data.loc[x.index, 'status'] != '200'].nunique()
+        ),
+        count_internal_issue=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+        ),
+        count_external_issue=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+        ),
+        count_internal_warning=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+        ),
+        count_external_warning=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+        ),
+        count_internal_notice=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+        ),
+        count_external_notice=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
         )
-    """)
+    ).reset_index()
 
-    cursor.executemany("""
-        INSERT INTO provision_summary (organisation, name, dataset, active_endpoint_count, error_endpoint_count, count_internal_error,
-            count_external_error, count_internal_warning, count_external_warning, count_internal_notice, count_external_notice)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, data)
-
-    conn.commit()
+    table_name = "provsion_summary"
+    final_result.to_sql(table_name, conn, if_exists='replace', index=False)
     conn.close()
+    
 
 def fetch_reporting_data(db_path):
     conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
     query = """
         SELECT 
             rle.organisation,
-            rle.name,
             rle.collection,
             rle.pipeline,
             rle.endpoint,
@@ -94,49 +121,15 @@ if __name__ == "__main__":
     performance_db_path = sys.argv[1] if len(sys.argv) > 1 else "dataset/performance.sqlite3"
     digital_land_db_path = sys.argv[2] if len(sys.argv) > 2 else "dataset/digital-land.sqlite3"
     
+    provision_data = fetch_provision_data(digital_land_db_path)
+    issue_data = fetch_issue_data(digital_land_db_path)
+
     reporting_data = fetch_reporting_data(performance_db_path)
-    # Fetch data from digital-land database
-    data = fetch_data_from_digital_land(digital_land_db_path)
-    print("Columns in reporting_data:", reporting_data.columns)
-    print("Columns in data:", data.columns)
-    merged_data = pd.merge(reporting_data, data, left_on=["resource", "pipeline"], right_on=["resource", "dataset"], how="left")
-    conn = sqlite3.connect(performance_db_path)
-    table_name = "merged_dataset_summary"  
-    merged_data.to_sql(table_name, conn, if_exists='replace', index=False)
 
-    final_result = merged_data.groupby(['organisation', 'name', 'pipeline']).agg(
-        active_endpoint_count=pd.NamedAgg(
-            column='endpoint', 
-            aggfunc=lambda x: x.nunique() if merged_data.loc[x.index, 'endpoint_end_date'].eq("").any() else 0
-        ),
-        error_endpoint_count=pd.NamedAgg(
-            column='endpoint', 
-            aggfunc=lambda x: x.nunique() if (merged_data.loc[x.index, 'endpoint_end_date'].eq("") & merged_data.loc[x.index, 'status'].ne(200)).any() else 0
-        ),
-        count_error=pd.NamedAgg(
-            column='severity', 
-            aggfunc=lambda x: (x.eq('error') & merged_data.loc[x.index, 'endpoint_end_date'].eq("")).sum()
-        ),
-        count_warning=pd.NamedAgg(
-            column='severity', 
-            aggfunc=lambda x: (x.eq('warning') & merged_data.loc[x.index, 'endpoint_end_date'].eq("")).sum()
-        )
-    ).reset_index()
-
-
-    print("Final result DataFrame:")
-    print(final_result.head())
-
-
-    conn = sqlite3.connect(performance_db_path)
-    table_name = "final_dataset_summary"
-    final_result.to_sql(table_name, conn, if_exists='replace', index=False)
-    conn.close()
-
-
+    merged_data = pd.merge(reporting_data, issue_data, left_on=["resource", "pipeline"], right_on=["resource", "dataset"], how="left")
     
     # Create new table and insert data in performance database
-    #create_organisation_dataset_summary(merged_data,  performance_db_path)
+    create_organisation_dataset_summary(merged_data,  performance_db_path)
 
     logging.info(
         "New table 'provision_summary' created successfully in performance database")
