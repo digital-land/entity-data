@@ -31,7 +31,7 @@ def fetch_issue_data(db_path):
         inner join resource r on i.resource = r.resource
         inner join issue_type it on i.issue_type = it.issue_type
         where r.end_date = ''
-        group by i.resource,i.issue_type
+        group by i.dataset,i.resource,i.issue_type
     """
     df_issue = pd.read_sql_query(query, conn)
     return df_issue
@@ -137,10 +137,15 @@ if __name__ == "__main__":
     
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
+    
+    conn = sqlite3.connect(performance_db_path)
+    issue_data.to_sql("issue_raw", conn, if_exists='replace', index=False)
+
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace("-eng", "")
-    
+    reporting_data.to_sql("reporting_data_raw", conn, if_exists="replace", index=False)
     provision_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
+    provision_reporting_data.to_sql("provision_reporting_data_raw", conn, if_exists="replace", index=False)
     merged_data = pd.merge(provision_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
     
     # Create new tables and insert data in performance database
