@@ -98,7 +98,7 @@ if __name__ == "__main__":
             ) t2 on t1.endpoint = t2.endpoint
         where date(t1.entry_date) = t2.most_recent_log_date
     """)
-
+    
     conn.execute("""
     CREATE TABLE reporting_historic_endpoints AS
     SELECT
