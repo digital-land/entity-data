@@ -122,8 +122,8 @@ def fetch_reporting_data(db_path):
             reporting_historic_endpoints rle
         WHERE 
         rle.endpoint_end_date = ''
-        GROUP BY rle.collection, rle.pipeline,rle.endpoint
-        order by rle.collection, rle.pipeline
+        GROUP BY rle.organisation,rle.collection, rle.pipeline,rle.endpoint
+        order by rle.organisation, rle.collection
         """
     df_reporting = pd.read_sql_query(query, conn)
     return df_reporting
@@ -137,12 +137,11 @@ if __name__ == "__main__":
     
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
-
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace("-eng", "")
     
-    provsion_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
-    merged_data = pd.merge(provsion_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
+    provision_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
+    merged_data = pd.merge(provision_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
     
     # Create new tables and insert data in performance database
     create_performance_tables(merged_data, performance_db_path)
