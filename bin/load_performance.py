@@ -36,7 +36,6 @@ def fetch_issue_data(db_path):
     df_issue = pd.read_sql_query(query, conn)
     return df_issue
 
-
 def create_performance_tables(merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
     issue_table_name = "issue_summary"  
