@@ -2,7 +2,7 @@
 
 set -e
 
-s3="https://files.development.digital-land.info/"
+s3="https://files.planning.data.gov.uk/"
 
 # Directory to save the database
 db_dir="dataset"
