@@ -26,7 +26,7 @@ def fetch_issue_data(db_path):
     query = """
         select  
         count(*) as count_issues, strftime('%d-%m-%Y', 'now') as date,
-        i.issue_type as issue_type, it.severity, it.responsibility, i.dataset, i.resource
+        i.issue_type as issue_type, it.severity, it.responsibility, i.dataset, i.resource, GROUP_CONCAT(DISTINCT i.field) as fields
         from issue i
         inner join resource r on i.resource = r.resource
         inner join issue_type it on i.issue_type = it.issue_type
