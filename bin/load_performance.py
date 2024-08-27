@@ -36,8 +36,46 @@ def fetch_issue_data(db_path):
     df_issue = pd.read_sql_query(query, conn)
     return df_issue
 
-def create_performance_tables(merged_data, performance_db_path):
+def fetch_column_field_data(db_path):
+    conn = sqlite3.connect(db_path)
+    query = """
+        select
+        cf.resource,
+        cf.dataset,
+        GROUP_CONCAT(
+            DISTINCT CASE
+                WHEN UPPER(cf.field) = UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
+                or cf.field in ('geometry', 'point') THEN cf.field
+                ELSE NULL
+            END
+        ) as matching_field,
+        GROUP_CONCAT(
+            DISTINCT CASE
+                WHEN UPPER(cf.field) != UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
+                and cf.field not in ('geometry', 'point') THEN cf.field
+                WHEN cf.field in ('geometry', 'point') THEN null
+                ELSE NULL
+            END
+        ) as non_matching_field
+        from
+            column_field cf
+            inner join resource r on cf.resource = r.resource
+        where
+            r.end_date = ''
+        group by
+            cf.resource,
+            cf.dataset
+    """
+
+    df_column_field = pd.read_sql_query(query, conn)
+    return df_column_field
+
+def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
+    column_field_table_name = "column_field_summary"
+    cf_merged_data_filtered = cf_merged_data[cf_merged_data['endpoint'].notna()]
+    cf_merged_data_filtered.to_sql(column_field_table_name, conn, if_exists="replace", index=False)
+
     issue_table_name = "issue_summary"  
 
     issue_data_filtered = merged_data[merged_data['endpoint'].notna()]
@@ -104,25 +142,25 @@ def fetch_reporting_data(db_path):
     conn = sqlite3.connect(db_path)
     query = """
         SELECT 
-            rle.organisation,
-            rle.collection,
-            rle.pipeline,
-            rle.endpoint,
-            rle.endpoint_url,
-            rle.resource,
-            rle.status,
-            rle.exception,
-            rle.endpoint_entry_date,
-            rle.endpoint_end_date,
-            rle.resource_start_date,
-            rle.resource_end_date,
-            max(rle.latest_log_entry_date) as latest_log_entry_date
+            rhe.organisation,
+            rhe.collection,
+            rhe.pipeline,
+            rhe.endpoint,
+            rhe.endpoint_url,
+            rhe.resource,
+            rhe.status,
+            rhe.exception,
+            rhe.endpoint_entry_date,
+            rhe.endpoint_end_date,
+            rhe.resource_start_date,
+            rhe.resource_end_date,
+            max(rhe.latest_log_entry_date) as latest_log_entry_date
         FROM 
-            reporting_historic_endpoints rle
+            reporting_historic_endpoints rhe
         WHERE 
-        rle.endpoint_end_date = ''
-        GROUP BY rle.organisation,rle.collection, rle.pipeline,rle.endpoint
-        order by rle.organisation, rle.collection
+        rhe.endpoint_end_date = ''
+        GROUP BY rhe.organisation,rhe.collection, rhe.pipeline,rhe.endpoint
+        order by rhe.organisation, rhe.collection
         """
     df_reporting = pd.read_sql_query(query, conn)
     return df_reporting
@@ -136,14 +174,15 @@ if __name__ == "__main__":
     
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
+    cf_data = fetch_column_field_data(digital_land_db_path)
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace("-eng", "")
     
     provision_reporting_data = pd.merge(provision_data, reporting_data, left_on=["organisation", "dataset"], right_on=["organisation", "pipeline"], how="left")
-    merged_data = pd.merge(provision_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
-    
+    issue_merged_data = pd.merge(provision_reporting_data, issue_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
+    cf_merged_data = pd.merge(provision_reporting_data, cf_data, left_on=["resource", "dataset"], right_on=["resource", "dataset"], how="left")
     # Create new tables and insert data in performance database
-    create_performance_tables(merged_data, performance_db_path)
+    create_performance_tables(issue_merged_data, cf_merged_data, performance_db_path)
 
     logging.info(
         "Tables in 'performance' DB created successfully.")
