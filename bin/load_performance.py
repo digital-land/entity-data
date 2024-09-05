@@ -118,6 +118,16 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
             column='count_issues',  
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') & 
                                 (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+        ),
+        count_internal_info=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'info') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+        ),
+        count_external_info=pd.NamedAgg(
+            column='count_issues',  
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'info') & 
+                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
         )
     ).reset_index()
    
@@ -130,7 +140,9 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
         'count_internal_warning': 'int',
         'count_external_warning': 'int',
         'count_internal_notice': 'int',
-        'count_external_notice': 'int'
+        'count_external_notice': 'int',
+        'count_internal_info': 'int',
+        'count_external_info': 'int'
     })
 
     provision_table_name = "provision_summary"
