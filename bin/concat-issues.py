@@ -24,3 +24,12 @@ for path in glob.glob("var/issue/*/*.csv"):
         row["resource"] = resource
         row["pipeline"] = pipeline
         w.writerow(row)
+
+operational_issue_dir = "performance/operational_issue/"
+fields = ["col1", "col2"]
+w = csv.DictWriter(open(os.path.join(operational_issue_dir,"operational-issue.csv"), "w"), fields)
+w.writeheader()
+
+for path in glob.glob("performance/operational_issue/*/operational-issue.csv"):
+    for row in csv.DictReader(open(path, newline="")):
+        w.writerow(row)
