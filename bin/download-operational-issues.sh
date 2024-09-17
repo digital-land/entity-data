@@ -12,10 +12,7 @@ while read dataset
 do
     path=$operational_issue_dir/$dataset/
     if [ ! -f $path ] ; then
-        mkdir -p $dir
         set -x
-        echo "$s3$operational_issue_dir/$dataset/operational-issue.csv"
-        echo $path
         # curl -qsfL $flags "$s3$operational_issue_dir/$dataset/operational-issue.csv" > $path
         set +x
     fi

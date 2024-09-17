@@ -26,7 +26,7 @@ for path in glob.glob("var/issue/*/*.csv"):
         w.writerow(row)
 
 operational_issue_dir = "performance/operational_issue/"
-fields = ["col1", "col2"]
+fields = ["dataset","resource","line-number","entry-number","field","issue-type","value","message","entry-date"]
 w = csv.DictWriter(open(os.path.join(operational_issue_dir,"operational-issue.csv"), "w"), fields)
 w.writeheader()
 
