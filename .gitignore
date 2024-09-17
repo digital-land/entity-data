@@ -27,6 +27,7 @@ dataset/
 issues/
 expectations/
 column-field/
+performance/
 
 # ignore databases
 *.db
