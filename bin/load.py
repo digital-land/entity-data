@@ -7,6 +7,8 @@ import sys
 import csv
 import logging
 import sqlite3
+
+import pandas as pd
 from digital_land.package.sqlite import SqlitePackage
 
 
@@ -87,6 +89,10 @@ if __name__ == "__main__":
     package.create()
 
     conn = sqlite3.connect(path)
+
+    operational_issue_log = pd.read_csv("performance/operational_issue/operational-issue.csv")
+    operational_issue_log.to_sql("operational_issue", conn, if_exists="replace", index=False)
+    
     conn.execute("""
     CREATE TABLE reporting_most_recent_log AS
     select t1.*
