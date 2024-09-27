@@ -18,6 +18,7 @@ first-pass::
 	bin/download-pipeline.sh
 	bin/concat.sh
 	bin/download-issues.sh
+	bin/download-operational-issues.sh
 	bin/download-column-field.sh
 	bin/download-expectations.sh
 	#bin/download-resources.sh
