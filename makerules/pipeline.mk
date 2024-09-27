@@ -159,15 +159,17 @@ clean::
 # local copy of the organisation dataset
 # Download historic operational issue log data for relevant datasets
 init::	$(CACHE_DIR)organisation.csv
+	@mkdir -p $(OPERATIONAL_ISSUE_DIR)
 	@datasets=$$(awk -F , '$$2 == "$(COLLECTION_NAME)" {print $$4}' specification/dataset.csv); \
 	for dataset in $$datasets; do \
+		mkdir -p $(OPERATIONAL_ISSUE_DIR)$$dataset; \
 		url="$(DATASTORE_URL)$(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv"; \
 		echo "Downloading operational issue log for $$dataset at url $$url";\
 		status_code=$$(curl --write-out "%{http_code}" --silent --output /dev/null "$$url"); \
 		if [ "$$status_code" -eq 200 ]; then \
 			echo "Downloading file..."; \
-			curl --silent --output "$(OPERATIONAL_ISSUE_DIR)/$$dataset/operational-issue.csv" "$$url"; \
-			echo "Log downloaded to $(OPERATIONAL_ISSUE_DIR)/$$dataset/operational-issue.csv"; \
+			curl --silent --output "$(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv" "$$url"; \
+			echo "Log downloaded to $(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv"; \
 		else \
 			echo "File not found at $$url"; \
 		fi; \
