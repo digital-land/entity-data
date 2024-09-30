@@ -62,6 +62,7 @@ tables = {
     "issue": "issues",
 
     "column-field": "column-field",
+    "converted-resource": "converted-resource",
 
     "expectation-result": "expectations",
     "expectation-issue": "expectations",

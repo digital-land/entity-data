@@ -28,6 +28,7 @@ issues/
 expectations/
 column-field/
 performance/
+converted-resource/
 
 # ignore databases
 *.db
