@@ -24,15 +24,15 @@ def fetch_historic_endpoints_data_from_dl(db_path):
         sp.pipeline,
         l.endpoint,
         e.endpoint_url,
-        l.status,
+        l.status as latest_status,
         l.exception,
         l.resource,
 
-        max(l.entry_date) as latest_log_entry_date,
-        e.entry_date as endpoint_entry_date,
-        e.end_date as endpoint_end_date,
-        r.start_date as resource_start_date,
-        r.end_date as resource_end_date
+        substring(max(l.entry_date),1,10) as latest_log_entry_date,
+        substring(e.entry_date,1,10) as endpoint_entry_date,
+        substring(e.end_date,1,10) as endpoint_end_date,
+        substring(r.start_date,1,10) as resource_start_date,
+        substring(r.end_date,1,10) as resource_end_date
 
     FROM
         log l
@@ -66,16 +66,16 @@ def fetch_latest_endpoints_data_from_dl(db_path):
                 sp.pipeline,
                 l.endpoint,
                 e.endpoint_url,
-                l.status,
+                l.status as latest_status,
                 t2.days_since_200,
                 l.exception,
                 l.resource,
 
-                max(l.entry_date) as latest_log_entry_date,
-                e.entry_date as endpoint_entry_date,
-                e.end_date as endpoint_end_date,
-                r.start_date as resource_start_date,
-                r.end_date as resource_end_date,
+                substring(max(l.entry_date),1,10) as latest_log_entry_date,
+                substring(e.entry_date,1,10) as endpoint_entry_date,
+                substring(e.end_date,1,10) as endpoint_end_date,
+                substring(r.start_date,1,10) as resource_start_date,
+                substring(r.end_date,1,10) as resource_end_date,
             
                 row_number() over (partition by s.organisation,sp.pipeline order by e.entry_date desc, l.entry_date desc) as rn
 
@@ -126,7 +126,7 @@ def create_reporting_tables(historic_endpoints_data, latest_endpoint_data, perfo
             pipeline TEXT,
             endpoint TEXT,
             endpoint_url TEXT,
-            status TEXT,
+            latest_status TEXT,
             exception TEXT,
             resource TEXT,
             latest_log_entry_date TEXT,
@@ -138,7 +138,7 @@ def create_reporting_tables(historic_endpoints_data, latest_endpoint_data, perfo
     """)
     cursor.executemany("""
             INSERT INTO reporting_historic_endpoints (
-                organisation, name, collection, pipeline, endpoint, endpoint_url, status, exception, resource, 
+                organisation, name, collection, pipeline, endpoint, endpoint_url, latest_status, exception, resource, 
                 latest_log_entry_date, endpoint_entry_date, endpoint_end_date, resource_start_date, resource_end_date
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, historic_endpoints_data)
@@ -152,7 +152,7 @@ def create_reporting_tables(historic_endpoints_data, latest_endpoint_data, perfo
             pipeline TEXT,
             endpoint TEXT,
             endpoint_url TEXT,
-            status TEXT,
+            latest_status TEXT,
             days_since_200 INTEGER,
             exception TEXT,
             resource TEXT,
@@ -168,7 +168,7 @@ def create_reporting_tables(historic_endpoints_data, latest_endpoint_data, perfo
     # Insert data into reporting_latest_endpoints
     cursor.executemany("""
             INSERT INTO reporting_latest_endpoints (
-                organisation, name, collection, pipeline, endpoint, endpoint_url, status, days_since_200, exception, resource, 
+                organisation, name, collection, pipeline, endpoint, endpoint_url, latest_status, days_since_200, exception, resource, 
                 latest_log_entry_date, endpoint_entry_date, endpoint_end_date, resource_start_date, resource_end_date, rn
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         """, latest_endpoint_data)

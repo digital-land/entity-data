@@ -114,7 +114,7 @@ if __name__ == "__main__":
         sp.pipeline,
         l.endpoint,
         e.endpoint_url,
-        l.status,
+        l.latest_status,
         l.exception,
         l.resource,
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
                 sp.pipeline,
                 l.endpoint,
                 e.endpoint_url,
-                l.status,
+                l.latest_status,
                 t2.days_since_200,
                 l.exception,
                 l.resource,

@@ -72,13 +72,15 @@ def fetch_column_field_data(db_path):
 
 def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
+
     column_field_table_name = "column_field_summary"
-    cf_merged_data_filtered = cf_merged_data[cf_merged_data['endpoint'].notna()]
+    cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'].notna()]
+    cf_merged_data_filtered = cf_merged_data_filtered.drop(['latest_status', 'exception', 'endpoint_entry_date', 'endpoint_end_date'], axis=1, errors='ignore')
     cf_merged_data_filtered.to_sql(column_field_table_name, conn, if_exists="replace", index=False)
 
     issue_table_name = "issue_summary"  
-
-    issue_data_filtered = merged_data[merged_data['endpoint'].notna()]
+    issue_data_filtered = merged_data[merged_data['resource'].notna()]
+    issue_data_filtered = issue_data_filtered.drop(['latest_status', 'exception', 'endpoint_entry_date', 'endpoint_end_date'], axis=1, errors='ignore')
     issue_data_filtered.to_sql(issue_table_name, conn, if_exists='replace', index=False)
     final_result = merged_data.groupby(['organisation', 'name', 'dataset']).agg(
         active_endpoint_count=pd.NamedAgg(
@@ -87,7 +89,7 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
         ),
          error_endpoint_count=pd.NamedAgg(
             column='endpoint', 
-            aggfunc=lambda x: x[merged_data.loc[x.index, 'status'] != '200'].nunique()
+            aggfunc=lambda x: x[merged_data.loc[x.index, 'latest_status'] != '200'].nunique()
         ),
         count_internal_issue=pd.NamedAgg(
             column='count_issues',  
@@ -148,13 +150,13 @@ def fetch_reporting_data(db_path):
             rhe.endpoint,
             rhe.endpoint_url,
             rhe.resource,
-            rhe.status,
+            rhe.latest_status,
             rhe.exception,
-            rhe.endpoint_entry_date,
-            rhe.endpoint_end_date,
-            rhe.resource_start_date,
-            rhe.resource_end_date,
-            max(rhe.latest_log_entry_date) as latest_log_entry_date
+            substring(rhe.endpoint_entry_date,1,10) as endpoint_entry_date,
+            substring(rhe.endpoint_end_date,1,10) as endpoint_end_date,
+            substring(rhe.resource_start_date,1,10) as resource_start_date,
+            substring(rhe.resource_end_date,1,10) as resource_end_date,
+            substring(max(rhe.latest_log_entry_date),1,10) as latest_log_entry_date
         FROM 
             reporting_historic_endpoints rhe
         WHERE 
