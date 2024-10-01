@@ -46,13 +46,13 @@ def fetch_column_field_data(db_path):
         cf.resource,
         cf.dataset,
         GROUP_CONCAT(
-            CASE
+           DISTINCT CASE
                 WHEN UPPER(cf.field) = UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
                 or cf.field in ('geometry', 'point') THEN cf.field
                 ELSE NULL
             END, ';') as mapping_field,
         GROUP_CONCAT(
-            CASE
+           DISTINCT CASE
                 WHEN UPPER(cf.field) != UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
                 and cf.field not in ('geometry', 'point') THEN cf.field
                 WHEN cf.field in ('geometry', 'point') THEN null
@@ -75,7 +75,7 @@ def fetch_column_field_data(db_path):
 
 def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
-    column_field_table_name = "endpoint__dataset_resource_summary"
+    column_field_table_name = "endpoint_dataset_resource_summary"
     cf_merged_data_filtered = cf_merged_data[cf_merged_data['endpoint'].notna(
     )]
     cf_merged_data_filtered.to_sql(
