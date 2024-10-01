@@ -216,7 +216,7 @@ metadata.json:
 datasette:	metadata.json
 	datasette serve $(DATASET_DIR)/*.sqlite3 \
 	--setting sql_time_limit_ms 5000 \
-	--load-extension /opt/homebrew/lib/mod_spatialite.dylib \
+	--load-extension $(SPATIALITE_EXTENSION) \
 	--metadata metadata.json
 
 FALLBACK_CONFIG_URL := https://files.planning.data.gov.uk/config/pipeline/$(COLLECTION_NAME)/
