@@ -45,19 +45,19 @@ def fetch_column_field_data(db_path):
         select
         cf.resource,
         cf.dataset,
-        GROUP_CONCAT(
+        REPLACE(GROUP_CONCAT(
            DISTINCT CASE
                 WHEN UPPER(cf.field) = UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
                 or cf.field in ('geometry', 'point') THEN cf.field
                 ELSE NULL
-            END, ';') as mapping_field,
-        GROUP_CONCAT(
+            END), ',', ';') as mapping_field,
+        REPLACE(GROUP_CONCAT(
            DISTINCT CASE
                 WHEN UPPER(cf.field) != UPPER(REPLACE(REPLACE(cf.column, " ", "-"), "_", "-"))
                 and cf.field not in ('geometry', 'point') THEN cf.field
                 WHEN cf.field in ('geometry', 'point') THEN null
                 ELSE NULL
-            END, ';') as non_mapping_field
+            END), ',', ';') as non_mapping_field
             
         from
             column_field cf
