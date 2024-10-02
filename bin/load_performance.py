@@ -134,14 +134,15 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
     conn = sqlite3.connect(performance_db_path)
 
     column_field_table_name = "endpoint_dataset_resource_summary"
-    cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'].notna(
-    )]
+    cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'] != ""]
+    cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna()]
     cf_merged_data_filtered = cf_merged_data_filtered.drop(['latest_status', 'exception', 'endpoint_entry_date', 'endpoint_end_date'], axis=1, errors='ignore')
     cf_merged_data_filtered.to_sql(
         column_field_table_name, conn, if_exists="replace", index=False)
 
     issue_table_name = "endpoint_dataset_issue_type_summary"
-    issue_data_filtered = merged_data[merged_data['resource'].notna()]
+    issue_data_filtered = merged_data[merged_data['resource'] != "" ]
+    issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
     issue_data_filtered = issue_data_filtered.drop(['latest_status', 'exception', 'endpoint_entry_date', 'endpoint_end_date'], axis=1, errors='ignore')
     issue_data_filtered.to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
                                'count_issues': 'INTEGER'})
