@@ -1,7 +1,4 @@
 #!/bin/sh
-exit 0;
-
-
 set -e
 
 s3="https://files.planning.data.gov.uk/"
