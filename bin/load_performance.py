@@ -79,12 +79,12 @@ def fetch_endpoint_summary(db_path):
         e.endpoint,
         e.endpoint_url,
         s.organisation,
-        t3.dataset,
-        t2.status as latest_status,
-        t2.exception as latest_exception,
+        t2.dataset,
+        t3.status as latest_status,
+        t3.exception as latest_exception,
         substring(e.entry_date, 1, 10) as entry_date,
         substring(e.end_date, 1, 10) as end_date,
-        t3.start_date as latest_resource_start_date
+        t2.start_date as latest_resource_start_date
     from
     endpoint e
     inner join source s on s.endpoint = e.endpoint
@@ -112,7 +112,7 @@ def fetch_endpoint_summary(db_path):
         ) t1 
         where
         t1.rn = 1
-    ) t3 on e.endpoint = t3.endpoint
+    ) t2 on e.endpoint = t2.endpoint
     inner join (
         SELECT
         endpoint,
@@ -123,7 +123,7 @@ def fetch_endpoint_summary(db_path):
         log
         GROUP BY
         endpoint
-    ) t2 on e.endpoint = t2.endpoint    
+    ) t3 on e.endpoint = t3.endpoint    
     """
 
     df_endpoint_summary = pd.read_sql_query(query, conn)
@@ -135,7 +135,7 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
 
     column_field_table_name = "endpoint_dataset_resource_summary"
     column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date",
-                                  "resource_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
+                                  "resource_end_date", "endpoint_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
     cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'] != ""]
     cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna()]
     cf_merged_data_filtered[column_field_table_fields].to_sql(
@@ -143,7 +143,7 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
 
     issue_table_name = "endpoint_dataset_issue_type_summary"
     issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", 
-                          "resource_end_date", "latest_log_entry_date", "count_issues", "date", "issue_type", "severity", "responsibility", "fields"]
+                          "resource_end_date", "endpoint_end_date", "latest_log_entry_date", "count_issues", "date", "issue_type", "severity", "responsibility", "fields"]
     issue_data_filtered = merged_data[merged_data['resource'] != "" ]
     issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
     issue_data_filtered[issue_table_fields].to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
