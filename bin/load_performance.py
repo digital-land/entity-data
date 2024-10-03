@@ -220,6 +220,7 @@ def fetch_reporting_data(db_path):
             rhe.pipeline,
             rhe.endpoint,
             rhe.endpoint_url,
+            rhe.licence,
             rhe.resource,
             rhe.latest_status,
             rhe.exception,
