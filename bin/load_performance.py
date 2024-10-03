@@ -76,15 +76,19 @@ def fetch_column_field_data(db_path):
 def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
     column_field_table_name = "endpoint_dataset_resource_summary"
-    cf_merged_data_filtered = cf_merged_data[cf_merged_data['endpoint'].notna(
-    )]
-    cf_merged_data_filtered.to_sql(
+    column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date",
+                                  "resource_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
+    cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'] != ""]
+    cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna()]
+    cf_merged_data_filtered[column_field_table_fields].to_sql(
         column_field_table_name, conn, if_exists="replace", index=False)
 
     issue_table_name = "endpoint_dataset_issue_type_summary"
-
-    issue_data_filtered = merged_data[merged_data['endpoint'].notna()]
-    issue_data_filtered.to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
+    issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", 
+                          "resource_end_date", "latest_log_entry_date", "count_issues", "date", "issue_type", "severity", "responsibility", "fields"]
+    issue_data_filtered = merged_data[merged_data['resource'] != "" ]
+    issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
+    issue_data_filtered[issue_table_fields].to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
                                'count_issues': 'INTEGER'})
 
     final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset']).agg(
