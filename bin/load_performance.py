@@ -86,46 +86,54 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     issue_data_filtered = merged_data[merged_data['endpoint'].notna()]
     issue_data_filtered.to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
                                'count_issues': 'INTEGER'})
-
+    
+    # Filter out endpoints with an end date as we don't want to count them in provision summary
     final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset']).agg(
         active_endpoint_count=pd.NamedAgg(
             column='endpoint',
-            aggfunc='nunique'
+            aggfunc=lambda x: x[(merged_data.loc[x.index,
+                                                'endpoint_end_date'].notna())].nunique()
         ),
         error_endpoint_count=pd.NamedAgg(
             column='endpoint',
-            aggfunc=lambda x: x[merged_data.loc[x.index,
-                                                'status'] != '200'].nunique()
+            aggfunc=lambda x: x[(merged_data.loc[x.index,'status'] != '200') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].nunique()
         ),
         count_issue_error_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_error_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_warning_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_warning_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_notice_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_notice_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         )
     ).reset_index()
 
@@ -166,8 +174,6 @@ def fetch_reporting_data(db_path):
             max(rhe.latest_log_entry_date) as latest_log_entry_date
         FROM 
             reporting_historic_endpoints rhe
-        WHERE 
-        rhe.endpoint_end_date = ''
         GROUP BY rhe.organisation,rhe.collection, rhe.pipeline,rhe.endpoint
         order by rhe.organisation, rhe.collection
         """
