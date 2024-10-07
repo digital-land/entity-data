@@ -115,6 +115,7 @@ if __name__ == "__main__":
         sp.pipeline,
         l.endpoint,
         e.endpoint_url,
+        s.licence,
         l.status,
         l.exception,
         l.resource,
@@ -134,7 +135,7 @@ if __name__ == "__main__":
         LEFT JOIN resource r on l.resource = r.resource
 
     GROUP BY
-        1, 2, 3, 4, 5, 6, 7, 8, 9
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
     ORDER BY
         s.organisation, o.name, s.collection, sp.pipeline, latest_log_entry_date DESC
@@ -151,6 +152,7 @@ if __name__ == "__main__":
                 sp.pipeline,
                 l.endpoint,
                 e.endpoint_url,
+                s.licence,
                 l.status,
                 t2.days_since_200,
                 l.exception,
@@ -186,7 +188,7 @@ if __name__ == "__main__":
             WHERE
                 e.end_date=''
             GROUP BY
-                1, 2, 3, 4, 5, 6, 7, 8, 9
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
             ORDER BY
                 s.organisation, o.name, s.collection, sp.pipeline, endpoint_entry_date DESC
