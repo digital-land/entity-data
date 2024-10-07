@@ -76,7 +76,7 @@ def fetch_column_field_data(db_path):
 def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
     column_field_table_name = "endpoint_dataset_resource_summary"
-    column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date",
+    column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", "endpoint_end_date",
                                   "resource_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
     cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'] != ""]
     cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna()]
@@ -84,7 +84,7 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
         column_field_table_name, conn, if_exists="replace", index=False)
 
     issue_table_name = "endpoint_dataset_issue_type_summary"
-    issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", 
+    issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url","endpoint_end_date", "resource", "resource_start_date", 
                           "resource_end_date", "latest_log_entry_date", "count_issues", "date", "issue_type", "severity", "responsibility", "fields"]
     issue_data_filtered = merged_data[merged_data['resource'] != "" ]
     issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
