@@ -72,8 +72,64 @@ def fetch_column_field_data(db_path):
     df_column_field = pd.read_sql_query(query, conn)
     return df_column_field
 
+def fetch_endpoint_summary(db_path):
+    conn = sqlite3.connect(db_path)
+    query = """
+    select
+        e.endpoint,
+        e.endpoint_url,
+        s.organisation,
+        t2.dataset,
+        t3.status as latest_status,
+        t3.exception as latest_exception,
+        substring(e.entry_date, 1, 10) as entry_date,
+        substring(e.end_date, 1, 10) as end_date,
+        t2.start_date as latest_resource_start_date
+    from
+    endpoint e
+    inner join source s on s.endpoint = e.endpoint
+    inner join (
+        select
+            *
+        from
+        (
+            SELECT
+            r.resource,
+            max(date(r.start_date)) as start_date,
+            re.endpoint,
+            rd.dataset,
+            row_number() over (
+                partition by re.endpoint
+                order by
+                r.start_date desc
+            ) as rn
+            FROM
+            resource r
+            inner join resource_endpoint re on re.resource = r.resource
+            inner join resource_dataset rd on rd.resource = r.resource
+            GROUP BY
+            re.endpoint
+        ) t1 
+        where
+        t1.rn = 1
+    ) t2 on e.endpoint = t2.endpoint
+    inner join (
+        SELECT
+        endpoint,
+        max(date(entry_date)),
+        status,
+        exception
+        FROM
+        log
+        GROUP BY
+        endpoint
+    ) t3 on e.endpoint = t3.endpoint    
+    """
 
-def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
+    df_endpoint_summary = pd.read_sql_query(query, conn)
+    return df_endpoint_summary
+
+def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data, performance_db_path):
     conn = sqlite3.connect(performance_db_path)
     column_field_table_name = "endpoint_dataset_resource_summary"
     column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", "endpoint_end_date",
@@ -90,46 +146,57 @@ def create_performance_tables(merged_data, cf_merged_data, performance_db_path):
     issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
     issue_data_filtered[issue_table_fields].to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
                                'count_issues': 'INTEGER'})
-
+    
+    endpoint_summary_table_name = "endpoint_dataset_summary"
+    endpoint_summary_data.to_sql(endpoint_summary_table_name, conn, if_exists='replace', index=False)
+    
+    # Filter out endpoints with an end date as we don't want to count them in provision summary
     final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset']).agg(
         active_endpoint_count=pd.NamedAgg(
             column='endpoint',
-            aggfunc='nunique'
+            aggfunc=lambda x: x[(merged_data.loc[x.index,
+                                                'endpoint_end_date'].notna())].nunique()
         ),
         error_endpoint_count=pd.NamedAgg(
             column='endpoint',
-            aggfunc=lambda x: x[merged_data.loc[x.index,
-                                                'status'] != '200'].nunique()
+            aggfunc=lambda x: x[(merged_data.loc[x.index,'status'] != '200') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].nunique()
         ),
         count_issue_error_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_error_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_warning_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_warning_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_notice_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'internal')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'internal') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         ),
         count_issue_notice_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
-                                (merged_data.loc[x.index, 'responsibility'] == 'external')].sum()
+                                (merged_data.loc[x.index, 'responsibility'] == 'external') &
+                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
         )
     ).reset_index()
 
@@ -171,8 +238,6 @@ def fetch_reporting_data(db_path):
             max(rhe.latest_log_entry_date) as latest_log_entry_date
         FROM 
             reporting_historic_endpoints rhe
-        WHERE 
-        rhe.endpoint_end_date = ''
         GROUP BY rhe.organisation,rhe.collection, rhe.pipeline,rhe.endpoint
         order by rhe.organisation, rhe.collection
         """
@@ -193,6 +258,7 @@ if __name__ == "__main__":
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
     cf_data = fetch_column_field_data(digital_land_db_path)
+    endpoint_summary_data = fetch_endpoint_summary(digital_land_db_path)
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace(
         "-eng", "")
@@ -205,7 +271,7 @@ if __name__ == "__main__":
                               "resource", "dataset"], right_on=["resource", "dataset"], how="left")
     # Create new tables and insert data in performance database
     create_performance_tables(
-        issue_merged_data, cf_merged_data, performance_db_path)
+        issue_merged_data, cf_merged_data, endpoint_summary_data, performance_db_path)
 
     logging.info(
         "Tables in 'performance' DB created successfully.")
