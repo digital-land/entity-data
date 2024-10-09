@@ -29,11 +29,11 @@ def fetch_historic_endpoints_data_from_dl(db_path):
         l.exception as latest_exception,
         l.resource,
 
-        max(l.entry_date) as latest_log_entry_date,
-        e.entry_date as endpoint_entry_date,
-        e.end_date as endpoint_end_date,
-        r.start_date as resource_start_date,
-        r.end_date as resource_end_date
+        substring(max(l.entry_date),1,10) as latest_log_entry_date,
+        substring(e.entry_date,1,10) as endpoint_entry_date,
+        substring(e.end_date,1,10) as endpoint_end_date,
+        substring(r.start_date,1,10) as resource_start_date,
+        substring(r.end_date,1,10) as resource_end_date
 
     FROM
         log l
@@ -73,11 +73,11 @@ def fetch_latest_endpoints_data_from_dl(db_path):
                 l.exception as latest_exception,
                 l.resource,
 
-                max(l.entry_date) as latest_log_entry_date,
-                e.entry_date as endpoint_entry_date,
-                e.end_date as endpoint_end_date,
-                r.start_date as resource_start_date,
-                r.end_date as resource_end_date,
+                substring(max(l.entry_date),1,10) as latest_log_entry_date,
+                substring(e.entry_date,1,10) as endpoint_entry_date,
+                substring(e.end_date,1,10) as endpoint_end_date,
+                substring(r.start_date,1,10) as resource_start_date,
+                substring(r.end_date,1,10) as resource_end_date,
             
                 row_number() over (partition by s.organisation,sp.pipeline order by e.entry_date desc, l.entry_date desc) as rn
 
