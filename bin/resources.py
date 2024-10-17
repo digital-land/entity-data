@@ -27,8 +27,8 @@ for row in csv.DictReader(open("collection/source.csv", newline="")):
                 endpoints[endpoint]["pipelines"][pipeline] = True
                 endpoints[endpoint]["collection"] = row["collection"]
 
-old_resources_map = {}
 
+old_resources_map = {}
 # Load old-resource.csv to create a mapping of old to updated resources
 for row in csv.DictReader(open("collection/old-resource.csv", newline="")):
     old_resource = row["old-resource"]
