@@ -155,7 +155,8 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
         active_endpoint_count=pd.NamedAgg(
             column='endpoint',
             aggfunc=lambda x: x[(merged_data.loc[x.index,
-                                                'endpoint_end_date'].notna())].nunique()
+                                                'endpoint_end_date'].isna() |
+                                                  (merged_data['endpoint_end_date'] == ""))].nunique()
         ),
         error_endpoint_count=pd.NamedAgg(
             column='endpoint',
