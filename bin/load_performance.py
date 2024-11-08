@@ -133,71 +133,81 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
     conn = sqlite3.connect(performance_db_path)
     column_field_table_name = "endpoint_dataset_resource_summary"
     column_field_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date",
-                                  "resource_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
+                                 "resource_end_date", "latest_log_entry_date", "mapping_field", "non_mapping_field"]
     cf_merged_data_filtered = cf_merged_data[cf_merged_data['resource'] != ""]
-    cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna()]
+    cf_merged_data_filtered = cf_merged_data_filtered[cf_merged_data_filtered['endpoint'].notna(
+    )]
     cf_merged_data_filtered[column_field_table_fields].to_sql(
         column_field_table_name, conn, if_exists="replace", index=False)
 
     issue_table_name = "endpoint_dataset_issue_type_summary"
-    issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date", 
+    issue_table_fields = ["organisation", "organisation_name", "cohort", "dataset", "collection", "pipeline", "endpoint", "endpoint_url", "resource", "resource_start_date",
                           "resource_end_date", "latest_log_entry_date", "count_issues", "date", "issue_type", "severity", "responsibility", "fields"]
-    issue_data_filtered = merged_data[merged_data['resource'] != "" ]
-    issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna() ]
+    issue_data_filtered = merged_data[merged_data['resource'] != ""]
+    issue_data_filtered = issue_data_filtered[issue_data_filtered['endpoint'].notna(
+    )]
     issue_data_filtered[issue_table_fields].to_sql(issue_table_name, conn, if_exists='replace', index=False, dtype={
-                               'count_issues': 'INTEGER'})
-    
+        'count_issues': 'INTEGER'})
+
     endpoint_summary_table_name = "endpoint_dataset_summary"
-    endpoint_summary_data.to_sql(endpoint_summary_table_name, conn, if_exists='replace', index=False)
-    
+    endpoint_summary_data.to_sql(
+        endpoint_summary_table_name, conn, if_exists='replace', index=False)
+
     # Filter out endpoints with an end date as we don't want to count them in provision summary
     final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset']).agg(
         active_endpoint_count=pd.NamedAgg(
             column='endpoint',
             aggfunc=lambda x: x[(merged_data.loc[x.index,
-                                                'endpoint_end_date'].isna() |
-                                                  (merged_data['endpoint_end_date'] == ""))].nunique()
+                                                 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].nunique()
         ),
         error_endpoint_count=pd.NamedAgg(
             column='endpoint',
-            aggfunc=lambda x: x[(merged_data.loc[x.index,'latest_status'] != '200') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].nunique()
+            aggfunc=lambda x: x[(merged_data.loc[x.index, 'latest_status'] != '200') &
+                                ((merged_data.loc[x.index, 'endpoint_end_date'].isna()) |
+                                (merged_data.loc[x.index, 'endpoint_end_date'] == ""))].nunique()
         ),
         count_issue_error_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'internal') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         ),
         count_issue_error_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'error') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'external') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         ),
         count_issue_warning_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'internal') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         ),
         count_issue_warning_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'warning') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'external') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         ),
         count_issue_notice_internal=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'internal') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         ),
         count_issue_notice_external=pd.NamedAgg(
             column='count_issues',
             aggfunc=lambda x: x[(merged_data.loc[x.index, 'severity'] == 'notice') &
                                 (merged_data.loc[x.index, 'responsibility'] == 'external') &
-                                (merged_data.loc[x.index,'endpoint_end_date'].notna())].sum()
+                                (merged_data.loc[x.index, 'endpoint_end_date'].isna() |
+                                 (merged_data['endpoint_end_date'] == ""))].sum()
         )
     ).reset_index()
 
