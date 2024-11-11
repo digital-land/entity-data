@@ -63,9 +63,6 @@ tables = {
 
     "column-field": "column-field",
     "converted-resource": "converted-resource",
-
-    "expectation-result": "expectations",
-    "expectation-issue": "expectations",
 }
 
 indexes = {
@@ -78,7 +75,6 @@ indexes = {
     "resource_organisation": ["resource", "organisation"],
     "specification_dataset": ["specification", "dataset"],
     "provision": ["organisation", "dataset", "project", "cohort", "provision_reason"],
-    "expectation-issue": ["expectation-result"],
 }
 
 

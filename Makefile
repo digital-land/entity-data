@@ -20,7 +20,6 @@ first-pass::
 	bin/download-issues.sh
 	bin/download-operational-issues.sh
 	bin/download-column-field.sh
-	bin/download-expectations.sh
 	bin/download-converted-resources.sh
 	#bin/download-resources.sh
 	python3 bin/concat-issues.py
