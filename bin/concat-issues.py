@@ -6,7 +6,7 @@ import glob
 import re
 import os
 
-fields = ["resource", "pipeline", "row-number", "field", "issue-type", "value", "message", "dataset", "entry-number", "line-number"]
+fields = ["resource", "pipeline", "row-number", "field", "issue-type", "value", "message", "dataset", "entry-number", "line-number", "entity"]
 
 issues_dir = "issues/"
 os.makedirs(issues_dir, exist_ok=True)
