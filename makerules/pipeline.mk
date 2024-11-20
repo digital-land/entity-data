@@ -258,7 +258,7 @@ state.json:
 	digital-land save-state --specification-dir=specification --collection-dir=$(COLLECTION_DIR) --pipeline-dir=$(PIPELINE_DIR) --output-path=state.json
 
 save-state:: state.json
-	aws s3 cp state.json s3://$(COLLECTION_DATASET_BUCKET_NAME)/state.json --no-progress
+	aws s3 cp state.json s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(REPOSITORY)/state.json --no-progress
 
 load-state::
-	aws s3 cp s3://$(COLLECTION_DATASET_BUCKET_NAME)/state.json state.json --no-progress || echo state.json not found in s3 bucket $(COLLECTION_DATASET_BUCKET_NAME)
+	aws s3 cp s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(REPOSITORY)/state.json state.json --no-progress || echo state.json not found in s3 bucket $(COLLECTION_DATASET_BUCKET_NAME)/$(REPOSITORY)
