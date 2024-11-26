@@ -122,7 +122,7 @@ endef
 
 define build-dataset =
 	mkdir -p $(@D)
-	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) $(^)
+	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) $(^) --cache-dir $(CACHE_DIR)/parquet
 	time datasette inspect $(basename $@).sqlite3 --inspect-file=$(basename $@).sqlite3.json
 	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR) dataset-entries $(basename $@).sqlite3 $@
 	mkdir -p $(FLATTENED_DIR)
@@ -232,14 +232,12 @@ datasette:	metadata.json
 	--load-extension $(SPATIALITE_EXTENSION) \
 	--metadata metadata.json
 
-FALLBACK_CONFIG_URL := https://files.planning.data.gov.uk/config/pipeline/$(COLLECTION_NAME)/
-
 $(PIPELINE_DIR)%.csv:
 	@mkdir -p $(PIPELINE_DIR)
 	@if [ ! -f $@ ]; then \
-		echo "Config file $@ not found locally. Attempting to download..."; \
+		echo "Config file $@ not found locally. Attempting to download from s3...."; \
 		curl -qfsL '$(PIPELINE_CONFIG_URL)$(notdir $@)' -o $@ || \
-		(echo "File not found in config repo. Attempting to download from AWS..." && curl -qfsL '$(FALLBACK_CONFIG_URL)$(notdir $@)' -o $@); \
+		(echo "File not found in config repo: $(notdir $@)" && exit 1); \
 	fi
 
 config:: $(PIPELINE_CONFIG_FILES)
