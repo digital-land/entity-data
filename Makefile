@@ -25,6 +25,7 @@ first-pass::
 	python3 bin/concat-issues.py
 	python3 bin/concat-column-field.py
 	python3 bin/concat-converted-resource.py
+	bin/download_expectations.py
 
 
 second-pass:: $(DB) 

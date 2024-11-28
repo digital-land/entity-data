@@ -58,6 +58,7 @@ tables = {
     "transform": "pipeline",
     "filter": "pipeline",
     "lookup": "pipeline",
+    "expectation":"expectation",
 
     "issue": "issues",
 
