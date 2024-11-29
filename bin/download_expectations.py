@@ -18,6 +18,7 @@ from digital_land.specification import Specification
 
 spec = Specification('specification')
 cache_exp_dir = 'var/expectations'
+Path(cache_exp_dir).mkdir(parents=True, exist_ok=True)
 
 datasets = spec.dataset
 for dataset_obj in datasets.values():
