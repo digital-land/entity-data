@@ -6,4 +6,5 @@ csvkit
 chardet
 PyPDF2
 pandas
+tqdm
 -e git+https://github.com/digital-land/digital-land-python.git#egg=digital-land
