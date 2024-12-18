@@ -11,6 +11,7 @@ include makerules/development.mk
 
 DB=dataset/digital-land.sqlite3
 DB_PERF = dataset/performance.sqlite3
+DATASTORE_URL = https://files.planning.data.gov.uk/
 
 first-pass::
 	mkdir -p dataset/
