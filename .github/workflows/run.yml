@@ -9,7 +9,7 @@ env:
   DLB_BOT_USERNAME: ${{ secrets.DLB_BOT_USERNAME }}
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Free up disk space
