@@ -3,12 +3,13 @@
 set -e
 
 s3="https://files.planning.data.gov.uk/"
+timestamp=`date +%s`
 
 # Directory to save the database
 db_dir="dataset"
 db_file="digital-land.sqlite3"
 db_path="${db_dir}/${db_file}"
-db_url="${s3}digital-land-builder/dataset/${db_file}"
+db_url="${s3}digital-land-builder/dataset/${db_file}?version=${timestamp}"
 
 # Create directory if it does not exist
 mkdir -p $db_dir

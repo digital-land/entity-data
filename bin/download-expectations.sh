@@ -19,7 +19,7 @@ do
             path=$dir$file
             if [ ! -f $path ] ; then
                 set -x
-                if ! curl -qsfL $flags --retry 3 -o $path $s3$collection-collection/dataset/$file; then
+                if ! curl -qsfL $flags --retry 3 -o $path $s3$collection-collection/dataset/$file?version=$timestamp ; then
                     echo "*** UNABLE TO DOWNLOAD $collection FROM $path ***"
                 fi
                 set +x
