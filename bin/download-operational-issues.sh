@@ -4,6 +4,7 @@
 
 s3="https://files.planning.data.gov.uk/"
 operational_issue_dir="performance/operational_issue/"
+timestamp=`date +%s`
 
 mkdir -p $operational_issue_dir
 
@@ -15,7 +16,7 @@ do
     if [ ! -f $path ] ; then
         mkdir -p $dir
         set -x
-        curl -qsfL $flags "$s3$operational_issue_dir$dataset/operational-issue.csv" > $path
+        curl -qsfL $flags "$s3$operational_issue_dir$dataset/operational-issue.csv?version=$timestamp" > $path
         set +x
     fi
 done
