@@ -4,6 +4,7 @@ set -e
 
 s3="https://files.planning.data.gov.uk/"
 expectations_dir="expectations/"
+timestamp=`date +%s`
 
 dir=var/$expectations_dir
 mkdir -p $dir
