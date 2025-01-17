@@ -1,6 +1,6 @@
 name: 'Unit test coverage report'
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
