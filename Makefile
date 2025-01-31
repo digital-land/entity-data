@@ -79,7 +79,9 @@ aws-build::
 push::
 	aws s3 cp $(DB) s3://digital-land-collection/digital-land.sqlite3
 	aws s3 cp $(DB_PERF) s3://digital-land-collection/performance.sqlite3
-	aws s3 sync $(PARQUET_DIR) s3://local-collection-data/${PARQUET_DIR} --no-progress
+	
+save-parquet:
+	aws s3 sync $(PARQUET_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(PARQUET_DIR) --no-progress
 
 specification::
 	# additional
