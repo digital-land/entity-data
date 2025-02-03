@@ -67,6 +67,6 @@ jobs:
       env:
         COLLECTION_DATASET_BUCKET_NAME: ${{secrets.DEVELOPMENT_DATA_S3_BUCKET}}
         HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.DEVELOPMENT_DATA_S3_BUCKET}}
-      run: make save-parquet
+      run: make save-tables-to-parquet
 
 
