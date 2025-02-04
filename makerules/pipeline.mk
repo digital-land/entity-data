@@ -77,6 +77,10 @@ ifeq ($(FLATTENED_DIR),)
 FLATTENED_DIR=flattened/
 endif
 
+ifeq ($(PARQUET_DIR),)
+PARQUET_DIR=data/
+endif
+
 ifeq ($(DATASET_DIRS),)
 DATASET_DIRS=\
 	$(TRANSFORMED_DIR)\
@@ -220,6 +224,10 @@ save-expectations::
 save-performance::
 	@mkdir -p $(PERFORMANCE_DIR)
 	aws s3 sync $(PERFORMANCE_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(PERFORMANCE_DIR) --no-progress
+
+save-tables-to-parquet:
+	@mkdir -p $(PARQUET_DIR)
+	aws s3 sync $(PARQUET_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(PARQUET_DIR) --no-progress
 
 # convert an individual resource
 # .. this assumes conversion is the same for every dataset, but it may not be soon
