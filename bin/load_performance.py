@@ -72,59 +72,25 @@ def fetch_column_field_data(db_path):
     df_column_field = pd.read_sql_query(query, conn)
     return df_column_field
 
-def fetch_endpoint_summary(db_path):
-    conn = sqlite3.connect(db_path)
+def fetch_endpoint_summary(perf_path):
+    conn = sqlite3.connect(perf_path)
     query = """
-    select
-        e.endpoint,
-        e.endpoint_url,
-        s.organisation,
-        t2.dataset,
-        t3.status as latest_status,
-        t3.exception as latest_exception,
-        substring(e.entry_date, 1, 10) as entry_date,
-        substring(e.end_date, 1, 10) as end_date,
-        t2.start_date as latest_resource_start_date
-    from
-    endpoint e
-    inner join source s on s.endpoint = e.endpoint
-    inner join (
-        select
-            *
-        from
-        (
-            SELECT
-            r.resource,
-            max(date(r.start_date)) as start_date,
-            re.endpoint,
-            rd.dataset,
-            row_number() over (
-                partition by re.endpoint
-                order by
-                r.start_date desc
-            ) as rn
-            FROM
-            resource r
-            inner join resource_endpoint re on re.resource = r.resource
-            inner join resource_dataset rd on rd.resource = r.resource
-            where r.end_date = ""
-            GROUP BY
-            re.endpoint
-        ) t1 
-        where
-        t1.rn = 1
-    ) t2 on e.endpoint = t2.endpoint
-    inner join (
-        SELECT
-        endpoint,
-        max(date(entry_date)), 
-        status,
-        exception
-        FROM
-        log
-        GROUP BY
-        endpoint
-    ) t3 on e.endpoint = t3.endpoint    
+    select  organisation, 
+    dataset,
+    endpoint,
+    endpoint_url, 
+    resource,
+    latest_status,
+    latest_exception,
+    max(latest_log_entry_date) as latest_log_entry_date,
+    endpoint_entry_date,
+    endpoint_end_date,
+    resource_start_date, 
+    resource_end_date
+    from reporting_historic_endpoints    
+    where (endpoint_end_date = '' or endpoint_end_date is null) -- only active endpoints
+    and (resource_end_date = '' or resource_end_date is null) -- only active resources
+    GROUP BY organisation, dataset, endpoint
     """
 
     df_endpoint_summary = pd.read_sql_query(query, conn)
@@ -270,7 +236,7 @@ if __name__ == "__main__":
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
     cf_data = fetch_column_field_data(digital_land_db_path)
-    endpoint_summary_data = fetch_endpoint_summary(digital_land_db_path)
+    endpoint_summary_data = fetch_endpoint_summary(performance_db_path)
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace(
         "-eng", "")
