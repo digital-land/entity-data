@@ -110,6 +110,7 @@ def fetch_endpoint_summary(db_path):
             resource r
             inner join resource_endpoint re on re.resource = r.resource
             inner join resource_dataset rd on rd.resource = r.resource
+            where r.end_date = ""
             GROUP BY
             re.endpoint
         ) t1 
@@ -119,7 +120,7 @@ def fetch_endpoint_summary(db_path):
     inner join (
         SELECT
         endpoint,
-        max(date(entry_date)),
+        max(date(entry_date)), 
         status,
         exception
         FROM
