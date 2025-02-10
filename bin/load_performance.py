@@ -83,9 +83,9 @@ def fetch_endpoint_summary(perf_path):
     latest_status,
     latest_exception,
     max(latest_log_entry_date) as latest_log_entry_date,
-    endpoint_entry_date,
-    endpoint_end_date,
-    resource_start_date, 
+    endpoint_entry_date as entry_date,
+    endpoint_end_date as end_date,
+    resource_start_date as latest_resource_start_date, 
     resource_end_date
     from reporting_historic_endpoints    
     where (endpoint_end_date = '' or endpoint_end_date is null) -- only active endpoints
