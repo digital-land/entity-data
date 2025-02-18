@@ -20,12 +20,10 @@ def check_performance_columns():
         print(message)
         for item in details:
             if not item["success"]:
-                print(f"{item["table"]} did not have all expected columns. Missing columns: {item["missing"]}")
-                print(f"Columns found: {item["actual"]}")
-                print(f"Expected columns: {item["expected"]}")
-    print(result)
-    print(message)
-    print(details)
+                print(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
+                print(f"Columns found: {item['actual']}")
+                print(f"Expected columns: {item['expected']}")
+        raise Exception(f"Performance DB check failed: {message}")
 
 
 if __name__ == "__main__":
