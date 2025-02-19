@@ -49,6 +49,9 @@ jobs:
     - name: Build dataset
       run: make
 
+    - name: Check performance database
+      run: make check-performance
+
     # Development
     - name: Configure Development AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1-node16
