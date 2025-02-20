@@ -1,7 +1,10 @@
+import logging
 import sqlite3
 from digital_land.expectations.operation import (
     check_columns
 )
+
+logger = logging.getLogger("__name__")
 
 EXPECTED = {
     "endpoint_dataset_issue_type_summary": ['organisation', 'organisation_name', 'cohort', 'dataset', 'collection', 'pipeline', 'endpoint', 'endpoint_url', 'resource', 'resource_start_date', 'resource_end_date', 'latest_log_entry_date', 'count_issues', 'date', 'issue_type', 'severity', 'responsibility', 'fields'],
@@ -16,13 +19,12 @@ def check_performance_columns():
     conn = sqlite3.connect("dataset/performance.sqlite3").cursor()
     result, message, details = check_columns(conn, EXPECTED)
     if not result:
-        print("Column check failed for performance DB")
-        print(message)
+        logging.error("Column check failed for performance DB")
+        logging.error(message)
         for item in details:
             if not item["success"]:
-                print("\n")
-                print(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
-                print(f"Columns found: {item['actual']}")
+                logging.error(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
+                logging.error(f"Columns found: {item['actual']}")
         raise Exception(f"Performance DB check failed: {message}")
 
 
