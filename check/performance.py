@@ -16,17 +16,19 @@ EXPECTED = {
 }
 
 def check_performance_columns():
-    conn = sqlite3.connect("dataset/performance.sqlite3").cursor()
-    result, message, details = check_columns(conn, EXPECTED)
-    if not result:
-        logging.error("Column check failed for performance DB")
-        logging.error(message)
-        for item in details:
-            if not item["success"]:
-                logging.error(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
-                logging.error(f"Columns found: {item['actual']}")
-        raise Exception(f"Performance DB check failed: {message}")
-    conn.close()
+    try:
+        conn = sqlite3.connect("dataset/performance.sqlite3").cursor()
+        result, message, details = check_columns(conn, EXPECTED)
+        if not result:
+            logging.error("Column check failed for performance DB")
+            logging.error(message)
+            for item in details:
+                if not item["success"]:
+                    logging.error(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
+                    logging.error(f"Columns found: {item['actual']}")
+            raise Exception(f"Performance DB check failed: {message}")
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":
