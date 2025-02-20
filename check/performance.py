@@ -26,6 +26,7 @@ def check_performance_columns():
                 logging.error(f"{item['table']} did not have all expected columns. Missing columns: {item['missing']}")
                 logging.error(f"Columns found: {item['actual']}")
         raise Exception(f"Performance DB check failed: {message}")
+    conn.close()
 
 
 if __name__ == "__main__":
