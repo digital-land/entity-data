@@ -77,6 +77,10 @@ ifeq ($(FLATTENED_DIR),)
 FLATTENED_DIR=flattened/
 endif
 
+ifeq ($(PARQUET_DIR),)
+PARQUET_DIR=data/
+endif
+
 ifeq ($(DATASET_DIRS),)
 DATASET_DIRS=\
 	$(TRANSFORMED_DIR)\
@@ -122,7 +126,7 @@ endef
 
 define build-dataset =
 	mkdir -p $(@D)
-	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) $(^)
+	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) --resource-path $(COLLECTION_DIR)resource.csv --cache-dir $(CACHE_DIR) $ $(^)
 	time datasette inspect $(basename $@).sqlite3 --inspect-file=$(basename $@).sqlite3.json
 	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR) dataset-entries $(basename $@).sqlite3 $@
 	mkdir -p $(FLATTENED_DIR)
@@ -134,9 +138,9 @@ define build-dataset =
 endef
 
 collection::
-	digital-land ${DIGITAL_LAND_OPTS} collection-pipeline-makerules --collection-dir $(COLLECTION_DIR) > $(COLLECTION_DIR)/pipeline.mk
+	digital-land ${DIGITAL_LAND_OPTS} collection-pipeline-makerules --collection-dir $(COLLECTION_DIR) > $(COLLECTION_DIR)pipeline.mk
 
--include $(COLLECTION_DIR)/pipeline.mk
+-include $(COLLECTION_DIR)pipeline.mk
 
 # restart the make process to pick-up collected resource files
 second-pass::
@@ -168,14 +172,14 @@ clean::
 
 # local copy of the organisation dataset
 # Download historic operational issue log data for relevant datasets
-init::	$(CACHE_DIR)organisation.csv
-	@mkdir -p $(OPERATIONAL_ISSUE_DIR)
+init:: $(CACHE_DIR)organisation.csv
+ifeq ($(COLLECTION_DATASET_BUCKET_NAME),)
 	@datasets=$$(awk -F , '$$2 == "$(COLLECTION_NAME)" {print $$4}' specification/dataset.csv); \
 	for dataset in $$datasets; do \
 		mkdir -p $(OPERATIONAL_ISSUE_DIR)$$dataset; \
 		url="$(DATASTORE_URL)$(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv"; \
 		echo "Downloading operational issue log for $$dataset at url $$url";\
-		status_code=$$(curl --write-out "%{http_code}" --silent --output /dev/null "$$url"); \
+		status_code=$$(curl --write-out "%{http_code}" --head --silent --output /dev/null "$$url"); \
 		if [ "$$status_code" -eq 200 ]; then \
 			echo "Downloading file..."; \
 			curl --silent --output "$(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv" "$$url"; \
@@ -184,6 +188,19 @@ init::	$(CACHE_DIR)organisation.csv
 			echo "File not found at $$url"; \
 		fi; \
 	done
+else
+	@datasets=$$(awk -F , '$$2 == "$(COLLECTION_NAME)" {print $$4}' specification/dataset.csv); \
+	for dataset in $$datasets; do \
+		mkdir -p $(OPERATIONAL_ISSUE_DIR)$$dataset; \
+		url="s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(OPERATIONAL_ISSUE_DIR)$$dataset/operational-issue.csv"; \
+        if aws s3 ls $$url > /dev/null 2>&1; then \
+            echo "File found at $$url, downloading..."; \
+            aws s3 cp $$url $(OPERATIONAL_ISSUE_DIR)/$$dataset/operational-issue.csv --no-progress; \
+        else \
+            echo "File not found at $$url"; \
+        fi; \
+	done
+endif
 
 makerules::
 	curl -qfsL '$(MAKERULES_URL)pipeline.mk' > makerules/pipeline.mk
@@ -214,6 +231,10 @@ save-performance::
 	@mkdir -p $(PERFORMANCE_DIR)
 	aws s3 sync $(PERFORMANCE_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(PERFORMANCE_DIR) --no-progress
 
+save-tables-to-parquet:
+	@mkdir -p $(PARQUET_DIR)
+	aws s3 sync $(PARQUET_DIR) s3://$(COLLECTION_DATASET_BUCKET_NAME)/$(PARQUET_DIR) --no-progress
+
 # convert an individual resource
 # .. this assumes conversion is the same for every dataset, but it may not be soon
 var/converted/%.csv: collection/resource/%
@@ -234,11 +255,11 @@ datasette:	metadata.json
 
 $(PIPELINE_DIR)%.csv:
 	@mkdir -p $(PIPELINE_DIR)
-	@if [ ! -f $@ ]; then \
-		echo "Config file $@ not found locally. Attempting to download from s3...."; \
-		curl -qfsL '$(PIPELINE_CONFIG_URL)$(notdir $@)' -o $@ || \
-		(echo "File not found in config repo: $(notdir $@)" && exit 1); \
-	fi
+ifeq ($(COLLECTION_DATASET_BUCKET_NAME),)
+	curl -qfsL '$(PIPELINE_CONFIG_URL)$(notdir $@)?version=$(shell date +%s)' -o $@
+else
+	aws s3 cp s3://$(COLLECTION_DATASET_BUCKET_NAME)/config/$(PIPELINE_DIR)$(COLLECTION_NAME)/$(notdir $@) $@ --no-progress
+endif
 
 config:: $(PIPELINE_CONFIG_FILES)
 ifeq ($(PIPELINE_CONFIG_FILES), .dummy)

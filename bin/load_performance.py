@@ -6,16 +6,19 @@ import sys
 import logging
 import sqlite3
 import pandas as pd
+import os
 
 indexes = {
     "provision_summary": ["organisation", "organisation_name", "dataset"]
 }
 
+PARQUET_PERFORMANCE_DIR = os.getenv("PARQUET_PERFORMANCE_DIR")
+
 
 def fetch_provision_data(db_path):
     conn = sqlite3.connect(db_path)
     query = """
-        select p.organisation, o.name as organisation_name, p.cohort, p.dataset from provision p
+        select p.organisation, o.name as organisation_name, p.cohort, p.dataset,p.provision_reason from provision p
         inner join organisation o on o.organisation = p.organisation
         order by p.organisation
     """
@@ -72,58 +75,25 @@ def fetch_column_field_data(db_path):
     df_column_field = pd.read_sql_query(query, conn)
     return df_column_field
 
-def fetch_endpoint_summary(db_path):
-    conn = sqlite3.connect(db_path)
+def fetch_endpoint_summary(perf_path):
+    conn = sqlite3.connect(perf_path)
     query = """
-    select
-        e.endpoint,
-        e.endpoint_url,
-        s.organisation,
-        t2.dataset,
-        t3.status as latest_status,
-        t3.exception as latest_exception,
-        substring(e.entry_date, 1, 10) as entry_date,
-        substring(e.end_date, 1, 10) as end_date,
-        t2.start_date as latest_resource_start_date
-    from
-    endpoint e
-    inner join source s on s.endpoint = e.endpoint
-    inner join (
-        select
-            *
-        from
-        (
-            SELECT
-            r.resource,
-            max(date(r.start_date)) as start_date,
-            re.endpoint,
-            rd.dataset,
-            row_number() over (
-                partition by re.endpoint
-                order by
-                r.start_date desc
-            ) as rn
-            FROM
-            resource r
-            inner join resource_endpoint re on re.resource = r.resource
-            inner join resource_dataset rd on rd.resource = r.resource
-            GROUP BY
-            re.endpoint
-        ) t1 
-        where
-        t1.rn = 1
-    ) t2 on e.endpoint = t2.endpoint
-    inner join (
-        SELECT
-        endpoint,
-        max(date(entry_date)),
-        status,
-        exception
-        FROM
-        log
-        GROUP BY
-        endpoint
-    ) t3 on e.endpoint = t3.endpoint    
+    select  organisation, 
+    dataset,
+    endpoint,
+    endpoint_url, 
+    resource,
+    latest_status,
+    latest_exception,
+    max(latest_log_entry_date) as latest_log_entry_date,
+    endpoint_entry_date as entry_date,
+    endpoint_end_date as end_date,
+    resource_start_date as latest_resource_start_date, 
+    resource_end_date
+    from reporting_historic_endpoints    
+    where (endpoint_end_date = '' or endpoint_end_date is null) -- only active endpoints
+    and (resource_end_date = '' or resource_end_date is null) -- only active resources
+    GROUP BY organisation, dataset, endpoint
     """
 
     df_endpoint_summary = pd.read_sql_query(query, conn)
@@ -154,7 +124,7 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
         endpoint_summary_table_name, conn, if_exists='replace', index=False)
 
     # Filter out endpoints with an end date as we don't want to count them in provision summary
-    final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset']).agg(
+    final_result = merged_data.groupby(['organisation', 'organisation_name', 'dataset', 'provision_reason']).agg(
         active_endpoint_count=pd.NamedAgg(
             column='endpoint',
             aggfunc=lambda x: x[(merged_data.loc[x.index,
@@ -224,6 +194,7 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
     })
 
     provision_table_name = "provision_summary"
+    final_result.to_parquet(os.path.join(PARQUET_PERFORMANCE_DIR,"provision_summary.parquet"), engine="pyarrow")
     final_result.to_sql(provision_table_name, conn,
                         if_exists='replace', index=False)
     conn.close()
@@ -269,7 +240,7 @@ if __name__ == "__main__":
     provision_data = fetch_provision_data(digital_land_db_path)
     issue_data = fetch_issue_data(digital_land_db_path)
     cf_data = fetch_column_field_data(digital_land_db_path)
-    endpoint_summary_data = fetch_endpoint_summary(digital_land_db_path)
+    endpoint_summary_data = fetch_endpoint_summary(performance_db_path)
     reporting_data = fetch_reporting_data(performance_db_path)
     reporting_data["organisation"] = reporting_data["organisation"].str.replace(
         "-eng", "")

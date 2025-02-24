@@ -9,7 +9,7 @@ env:
   DLB_BOT_USERNAME: ${{ secrets.DLB_BOT_USERNAME }}
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Free up disk space
@@ -49,6 +49,9 @@ jobs:
     - name: Build dataset
       run: make
 
+    - name: Check performance database
+      run: make check-performance
+
     # Development
     - name: Configure Development AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1-node16
@@ -63,6 +66,12 @@ jobs:
         HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.DEVELOPMENT_DATA_S3_BUCKET}}
       run: make save-dataset
 
+    - name: Save Parquet files to Development S3
+      env:
+        COLLECTION_DATASET_BUCKET_NAME: ${{secrets.DEVELOPMENT_DATA_S3_BUCKET}}
+        HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.DEVELOPMENT_DATA_S3_BUCKET}}
+      run: make save-tables-to-parquet
+
     # Staging
     - name: Configure Staging AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1-node16
@@ -76,6 +85,12 @@ jobs:
         COLLECTION_DATASET_BUCKET_NAME: ${{secrets.STAGING_DATA_S3_BUCKET}}
         HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.STAGING_DATA_S3_BUCKET}}
       run: make save-dataset
+
+    - name: Save Parquet files to Staging S3
+      env:
+        COLLECTION_DATASET_BUCKET_NAME: ${{secrets.STAGING_DATA_S3_BUCKET}}
+        HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.STAGING_DATA_S3_BUCKET}}
+      run: make save-tables-to-parquet
     
     # Production
     - name: Configure Production AWS Credentials
@@ -90,6 +105,12 @@ jobs:
         COLLECTION_DATASET_BUCKET_NAME: ${{secrets.PRODUCTION_DATA_S3_BUCKET}}
         HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.PRODUCTION_DATA_S3_BUCKET}}
       run: make save-dataset
+    
+    - name: Save Parquet files to Prod S3
+      env:
+        COLLECTION_DATASET_BUCKET_NAME: ${{secrets.PRODUCTION_DATA_S3_BUCKET}}
+        HOISTED_COLLECTION_DATASET_BUCKET_NAME: ${{secrets.PRODUCTION_DATA_S3_BUCKET}}
+      run: make save-tables-to-parquet
 
   check-digital-land-builder-errors:
     runs-on: ubuntu-latest

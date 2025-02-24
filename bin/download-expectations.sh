@@ -4,6 +4,7 @@ set -e
 
 s3="https://files.planning.data.gov.uk/"
 expectations_dir="expectations/"
+timestamp=`date +%s`
 
 dir=var/$expectations_dir
 mkdir -p $dir
@@ -19,7 +20,7 @@ do
             path=$dir$file
             if [ ! -f $path ] ; then
                 set -x
-                if ! curl -qsfL $flags --retry 3 -o $path $s3$collection-collection/dataset/$file; then
+                if ! curl -qsfL $flags --retry 3 -o $path $s3$collection-collection/dataset/$file?version=$timestamp ; then
                     echo "*** UNABLE TO DOWNLOAD $collection FROM $path ***"
                 fi
                 set +x
