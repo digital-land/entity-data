@@ -7,7 +7,6 @@ import click
 def get_resources(input_dir):
     endpoints = {}
     resources = {}
-    print("hello from inside get resources")
 
     # Load endpoints
     try:
@@ -67,7 +66,6 @@ def get_resources(input_dir):
     except FileNotFoundError:
         print("Error: resource.csv not found", file=sys.stderr)
         sys.exit(1)
-    print("hello at the end of get resources")
     return resources
 
 @click.command()
@@ -86,4 +84,4 @@ def process_data(input_dir):
             print(collection, pipeline, resource)
     
 if __name__ == "__main__":
-    process_data("collection/")
+    process_data()
