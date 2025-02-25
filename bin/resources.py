@@ -82,6 +82,6 @@ def process_data(input_dir):
         collection = resources[resource]["collection"]
         for pipeline in resources[resource]["pipelines"]:
             print(collection, pipeline, resource)
-    
+
 if __name__ == "__main__":
     process_data()
