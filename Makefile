@@ -31,10 +31,10 @@ first-pass::
 	bin/download-collection.sh
 	bin/download-pipeline.sh
 	bin/concat.sh
-	python3 bin/download-issues.py
+	python bin/download-issues.py
 	bin/download-operational-issues.sh
-	python3 bin/download-column-field.py
-	python3 bin/download-converted-resources.py
+	python bin/download-column-field.py
+	python bin/download-converted-resources.py
 	#bin/download-resources.sh
 	./bin/concat-issues.py
 	./bin/concat-column-field.py

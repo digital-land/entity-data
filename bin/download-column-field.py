@@ -10,7 +10,6 @@ from file_downloader import download_urls
 logger =  logging.getLogger("__name__")
 
 @click.command()
-@click.option("--timestamp",default=None)
 def download_column_field(timestamp=None):
     resources = get_resources("collection/")
     url_map = {}
