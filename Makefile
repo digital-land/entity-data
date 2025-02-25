@@ -35,10 +35,10 @@ first-pass::
 	bin/download-operational-issues.sh; \
 	python bin/download-column-field.py; \
 	python bin/download-converted-resources.py; \
-	#bin/download-resources.sh; \
-	./bin/concat-issues.py; \
-	./bin/concat-column-field.py; \
-	./bin/concat-converted-resource.py; \
+	#bin/download-resources.sh
+	./bin/concat-issues.py
+	./bin/concat-column-field.py
+	./bin/concat-converted-resource.py
 	python3 bin/download_expectations.py
 
 second-pass:: $(DB) 
