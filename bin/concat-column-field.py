@@ -32,14 +32,16 @@ def process_column_fields(column_field_dir, input_dir):
         w.writeheader()
 
 
-    for path in glob.glob(f"{input_dir}/*/*.csv"):
-        m = re.search(r"/([a-zA-Z0-9_-]+)/([a-f0-9]+).csv$", path)
-        pipeline = m.group(1)
-        resource = m.group(2)
+        for path in glob.glob(f"{input_dir}/*/*.csv"):
+            m = re.search(r"/([a-zA-Z0-9_-]+)/([a-f0-9]+).csv$", path)
+            pipeline = m.group(1)
+            resource = m.group(2)
 
-        with open(path, newline="") as infile:
-                for row in csv.DictReader(infile):
-                    row["resource"] = resource
-                    row["dataset"] = pipeline
-                    w.writerow(row)
+            with open(path, newline="") as infile:
+                    for row in csv.DictReader(infile):
+                        row["resource"] = resource
+                        row["dataset"] = pipeline
+                        w.writerow(row)
 
+if __name__ == "__main__":
+    process_column_fields()

@@ -10,17 +10,21 @@ from concurrent.futures import ThreadPoolExecutor
 
 logger = logging.getLogger("__name__")
 
-def download_file(url, output_path,raise_error=False):
+def download_file(url, output_path,raise_error=False, max_retries=5):
     """Downloads a file using urllib and saves it to the output directory."""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True,exist_ok=True)
-    try:
-        urlretrieve(url, output_path)
-    except Exception as e:
-        if raise_error:
-            raise e
-        else:
-            logger.error(f"error downloading file {e}")
+    retries = 0
+    while retries < max_retries:
+        try:
+            urlretrieve(url, output_path)
+            break
+        except Exception as e:
+            if raise_error:
+                raise e
+            else:
+                logger.error(f"error downloading file from url {url}: {e}")
+        retries += 1
 
 def download_urls(url_map, max_threads=4):
     """Downloads multiple files concurrently using threads."""
