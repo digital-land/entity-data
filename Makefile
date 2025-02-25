@@ -26,21 +26,20 @@ endif
 DATASTORE_URL = https://files.planning.data.gov.uk/
 
 first-pass::
-	export PYTHONPATH=.
-	mkdir -p dataset/
-	bin/download-collection.sh
-	bin/download-pipeline.sh
-	bin/concat.sh
-	python bin/download-issues.py
-	bin/download-operational-issues.sh
-	python bin/download-column-field.py
-	python bin/download-converted-resources.py
-	#bin/download-resources.sh
-	./bin/concat-issues.py
-	./bin/concat-column-field.py
-	./bin/concat-converted-resource.py
+	export PYTHONPATH=$(shell pwd); \
+	mkdir -p dataset/; \
+	bin/download-collection.sh; \
+	bin/download-pipeline.sh; \
+	bin/concat.sh; \
+	python bin/download-issues.py; \
+	bin/download-operational-issues.sh; \
+	python bin/download-column-field.py; \
+	python bin/download-converted-resources.py; \
+	#bin/download-resources.sh; \
+	./bin/concat-issues.py; \
+	./bin/concat-column-field.py; \
+	./bin/concat-converted-resource.py; \
 	python3 bin/download_expectations.py
-
 
 second-pass:: $(DB) 
 
