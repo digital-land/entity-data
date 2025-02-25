@@ -42,7 +42,7 @@ Path('expectation').mkdir(parents=True, exist_ok=True)
 conn.execute(
     f"""
         COPY (
-            SELECT * FROM '{cache_exp_dir}/*.parquet'
+            SELECT * FROM parquet_scan('{cache_exp_dir}/*.parquet',union_by_name=True)
         ) 
         TO 'expectation/expectation.csv' (FORMAT CSV, HEADER TRUE)
     """
