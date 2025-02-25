@@ -26,7 +26,7 @@ endif
 DATASTORE_URL = https://files.planning.data.gov.uk/
 
 first-pass::
-	export PYTHONPATH=$(pwd)
+	export PYTHONPATH=.
 	mkdir -p dataset/
 	bin/download-collection.sh
 	bin/download-pipeline.sh
