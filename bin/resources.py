@@ -4,15 +4,7 @@ import sys
 import csv
 import click
 
-@click.command()
-@click.option(
-    "--input-dir", 
-    default="collection/", 
-    help="Directory containing the CSV files"
-)
-def process_data(input_dir):
-    """Process CSV files to map resources, endpoints, and pipelines."""
-    
+def get_resources(input_dir):
     endpoints = {}
     resources = {}
 
@@ -74,7 +66,17 @@ def process_data(input_dir):
     except FileNotFoundError:
         print("Error: resource.csv not found", file=sys.stderr)
         sys.exit(1)
+    return resources
 
+@click.command()
+@click.option(
+    "--input-dir", 
+    default="collection/", 
+    help="Directory containing the CSV files"
+)
+def process_data(input_dir):
+    """Process CSV files to map resources, endpoints, and pipelines."""
+    resources = get_resources(input_dir)
     # Print results
     for resource in resources:
         collection = resources[resource]["collection"]
