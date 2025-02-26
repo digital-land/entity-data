@@ -121,12 +121,12 @@ endif
 
 define run-pipeline
 	mkdir -p $(@D) $(ISSUE_DIR)$(notdir $(@D)) $(OPERATIONAL_ISSUE_DIR) $(OUTPUT_LOG_DIR) $(COLUMN_FIELD_DIR)$(notdir $(@D)) $(DATASET_RESOURCE_DIR)$(notdir $(@D)) $(CONVERTED_RESOURCE_DIR)$(notdir $(@D))
-	digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(@D)) --pipeline-dir $(PIPELINE_DIR) $(DIGITAL_LAND_FLAGS) pipeline $(1) --issue-dir $(ISSUE_DIR)$(notdir $(@D)) --column-field-dir $(COLUMN_FIELD_DIR)$(notdir $(@D)) --dataset-resource-dir $(DATASET_RESOURCE_DIR)$(notdir $(@D)) --converted-resource-dir $(CONVERTED_RESOURCE_DIR)$(notdir $(@D)) --config-path $(CACHE_DIR)config.sqlite3 --organisation-path $(CACHE_DIR)organisation.csv $(PIPELINE_FLAGS) $< $@
+	digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(@D)) --pipeline-dir $(PIPELINE_DIR) $(DIGITAL_LAND_FLAGS) pipeline $(1) --issue-dir $(ISSUE_DIR)$(notdir $(@D)) --column-field-dir $(COLUMN_FIELD_DIR)$(notdir $(@D)) --dataset-resource-dir $(DATASET_RESOURCE_DIR)$(notdir $(@D)) --converted-resource-dir $(CONVERTED_RESOURCE_DIR)$(notdir $(@D)) --config-path $(CACHE_DIR)config.sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --provision-summary-dir $(CACHE_DIR)provision_summary.csv $(PIPELINE_FLAGS) $< $@
 endef
 
 define build-dataset =
 	mkdir -p $(@D)
-	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) $(^)
+	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR)  dataset-create --output-path $(basename $@).sqlite3 --organisation-path $(CACHE_DIR)organisation.csv --issue-dir $(ISSUE_DIR) --column-field-dir=$(COLUMN_FIELD_DIR) --dataset-resource-dir $(DATASET_RESOURCE_DIR) --resource-path $(COLLECTION_DIR)resource.csv --cache-dir $(CACHE_DIR) $ $(^)
 	time datasette inspect $(basename $@).sqlite3 --inspect-file=$(basename $@).sqlite3.json
 	time digital-land ${DIGITAL_LAND_OPTS} --dataset $(notdir $(basename $@)) --pipeline-dir $(PIPELINE_DIR) dataset-entries $(basename $@).sqlite3 $@
 	mkdir -p $(FLATTENED_DIR)
@@ -172,7 +172,7 @@ clean::
 
 # local copy of the organisation dataset
 # Download historic operational issue log data for relevant datasets
-init:: $(CACHE_DIR)organisation.csv
+init:: $(CACHE_DIR)organisation.csv $(CACHE_DIR)provision_summary.csv
 ifeq ($(COLLECTION_DATASET_BUCKET_NAME),)
 	@datasets=$$(awk -F , '$$2 == "$(COLLECTION_NAME)" {print $$4}' specification/dataset.csv); \
 	for dataset in $$datasets; do \
