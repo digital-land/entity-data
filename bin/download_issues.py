@@ -3,8 +3,8 @@ import logging
 import click
 from datetime import datetime
 
-from bin.resources import get_resources
-from bin.file_downloader import download_urls
+from resources import get_resources
+from file_downloader import download_urls
 
 
 logger =  logging.getLogger("__name__")
