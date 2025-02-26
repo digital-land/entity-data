@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
+
 import logging
 import click
 from datetime import datetime
 
 from bin.resources import get_resources
-from file_downloader import download_urls
-
+from bin.file_downloader import download_urls
 
 logger =  logging.getLogger("__name__")
 
 @click.command()
-def download_issues(timestamp=None):
+def download_column_field(timestamp=None):
     resources = get_resources("collection/")
     url_map = {}
     now = datetime.now()
@@ -22,12 +22,13 @@ def download_issues(timestamp=None):
             if not pipeline:
                 logger.error(f"no pipeline for {resource} in {collection} so cannot download")
             else:
-                url = f"https://files.planning.data.gov.uk/{collection}-collection/issue/{pipeline}/{resource}.csv?version={timestamp}"
-                output_path = f"var/issue/{pipeline}/{resource}.csv"
+                url = f"https://files.planning.data.gov.uk/{collection}-collection/var/column-field/{pipeline}/{resource}.csv?version={timestamp}"
+                output_path = f"var/column-field/{pipeline}/{resource}.csv"
                 url_map[url]=output_path
+
     download_urls(url_map)
 
 
 
 if __name__ == "__main__":
-    download_issues()
+    download_column_field()
