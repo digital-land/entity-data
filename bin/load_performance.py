@@ -124,6 +124,8 @@ def create_performance_tables(merged_data, cf_merged_data, endpoint_summary_data
         'count_issues': 'INTEGER'})
 
     endpoint_summary_table_name = "endpoint_dataset_summary"
+    endpoint_summary_data.to_parquet(os.path.join(PARQUET_PERFORMANCE_DIR,
+                                        "endpoint_dataset_summary.parquet"), engine="pyarrow")
     endpoint_summary_data.to_sql(
         endpoint_summary_table_name, conn, if_exists='replace', index=False)
 
