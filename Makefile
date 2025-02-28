@@ -30,16 +30,15 @@ first-pass::
 	bin/download-collection.sh
 	bin/download-pipeline.sh
 	bin/concat.sh
-	bin/download-issues.sh
+	python bin/download_issues.py
 	bin/download-operational-issues.sh
-	bin/download-column-field.sh
-	bin/download-converted-resources.sh
+	python bin/download_column_field.py
+	python bin/download_converted_resources.py
 	#bin/download-resources.sh
 	./bin/concat-issues.py
 	./bin/concat-column-field.py
 	./bin/concat-converted-resource.py
 	python3 bin/download_expectations.py
-
 
 second-pass:: $(DB) 
 
