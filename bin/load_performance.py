@@ -82,6 +82,7 @@ def fetch_endpoint_summary(perf_path):
     dataset,
     endpoint,
     endpoint_url, 
+    documentation_url,
     resource,
     latest_status,
     latest_exception,
