@@ -4,7 +4,6 @@
 
 import os
 import sys
-import csv
 import logging
 import sqlite3
 
@@ -23,12 +22,14 @@ tables = {
     "old-resource": "collection",
     "log": "collection",
 
+    "award": "specification",
     "collection": "specification",
     "theme": "specification",
     "typology": "specification",
     "dataset": "specification",
     "dataset-field": "specification",
     "field": "specification",
+    "fund": "specification",
     "datatype": "specification",
     "prefix": "specification",
     "severity": "specification",
@@ -46,6 +47,8 @@ tables = {
     "provision": "specification",
     "provision-rule": "specification",
     "provision-reason": "specification",
+    "quality": "specification",
+    "datatype": "specification",
     "specification": "specification",
     "specification-status": "specification",
 
@@ -206,4 +209,3 @@ if __name__ == "__main__":
         where t1.rn = 1              
     """)
     conn.close()
-

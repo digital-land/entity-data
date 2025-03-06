@@ -96,6 +96,9 @@ specification::
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision.csv' > specification/provision.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-rule.csv' > specification/provision-rule.csv
 	curl -qfsL '$(SOURCE_URL)/specification/main/specification/provision-reason.csv' > specification/provision-reason.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/fund.csv' > specification/fund.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/award.csv' > specification/award.csv
+	curl -qfsL '$(SOURCE_URL)/specification/main/specification/quality.csv' > specification/quality.csv
 
 check-performance::
 	python check/performance.py
